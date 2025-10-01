@@ -10,7 +10,7 @@ const AddPostPage = () => {
 
   const [formData, setFormData] = useState({
     title: '',
-    description: '',
+    content: '',
     faculty: '',
     department: '',
   });
@@ -54,22 +54,18 @@ const AddPostPage = () => {
     setError('');
     setSuccess(false);
 
-    if (!formData.title || !formData.description || !formData.faculty || !formData.department) {
+    if (!formData.title || !formData.content || !formData.faculty || !formData.department) {
       setError('Lütfen tüm alanları doldurun');
       setLoading(false);
       return;
     }
 
-    if (!file) {
-      setError('Lütfen bir dosya seçin');
-      setLoading(false);
-      return;
-    }
+  
 
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
+      formDataToSend.append('content', formData.content);
       formDataToSend.append('faculty', formData.faculty);
       formDataToSend.append('department', formData.department);
       formDataToSend.append('file', file);
@@ -125,15 +121,15 @@ const AddPostPage = () => {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
               Açıklama *
             </label>
             <textarea
-              id="description"
-              name="description"
+              id="content"
+              name="content"
               rows="4"
               required
-              value={formData.description}
+              value={formData.content}
               onChange={handleChange}
               className="input-field"
               placeholder="Notlar hakkında kısa bir açıklama yazın..."

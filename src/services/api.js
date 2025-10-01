@@ -27,6 +27,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Hatası:', error.response?.status, error.response?.data?.message || error.message);
+    
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -45,14 +47,14 @@ export const authAPI = {
 // Posts API
 export const postsAPI = {
   getAllPosts: () => api.get('/posts/getpost'),
-  getMyPosts:() => api.get('/posts/my-posts'),
-  addPost: (formData) => {
-    return api.post('/posts/addpost', formData, {
+  getMyPosts: () => api.get('/posts/my-posts'), 
+  addPost: (formData) => {return api.post('/posts/addpost', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
+  deletePost:(postId) => api.delete(`/posts/deletepost/${postId}`),
 };
 
 // Saved Posts API

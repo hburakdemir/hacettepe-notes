@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { postsAPI } from '../services/api';
-import PostCard from '../components/PostCard';
-import { ArrowLeft, Loader } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { postsAPI } from "../services/api";
+import PostCard from "../components/PostCard";
+import { ArrowLeft, Loader } from "lucide-react";
 
 const DepartmentDetailPage = () => {
   const { faculty, department } = useParams();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Post ID helper
+  const getPostId = (post) =>
+    post._id || post.id || post.postId || post.post_id || post.ID;
 
   useEffect(() => {
     fetchDepartmentPosts();
@@ -24,10 +28,16 @@ const DepartmentDetailPage = () => {
       );
       setPosts(filteredPosts);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePostDelete = async (deletedId) => {
+    setPosts((prev) =>
+      prev.filter((p) => String(getPostId(p)) !== String(deletedId))
+    );
   };
 
   if (loading) {
@@ -67,7 +77,12 @@ const DepartmentDetailPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {posts.map((post) => (
-            <PostCard key={post._id} post={post} onSaveToggle={fetchDepartmentPosts} />
+            <PostCard
+              key={getPostId(post)}
+              post={post}
+              onSaveToggle={fetchDepartmentPosts}
+              onDelete={handlePostDelete}
+            />
           ))}
         </div>
       )}

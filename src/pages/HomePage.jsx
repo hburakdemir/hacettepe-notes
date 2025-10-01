@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { postsAPI } from '../services/api';
-import PostCard from '../components/PostCard';
-import { Search, Loader } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { postsAPI } from "../services/api";
+import PostCard from "../components/PostCard";
+import { Search, Loader } from "lucide-react";
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFaculty, setSelectedFaculty] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFaculty, setSelectedFaculty] = useState("");
+
+  // Post ID helper
+  const getPostId = (post) =>
+    post._id || post.id || post.postId || post.post_id || post.ID;
 
   useEffect(() => {
     fetchPosts();
@@ -19,24 +23,32 @@ const HomePage = () => {
       const response = await postsAPI.getAllPosts();
       setPosts(response.data);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
   };
+
+
+  const handlePostDelete = async(deletedId) => {
+    setPosts(prev => prev.filter(p=> String(getPostId(p)) !== String(deletedId)));
+  };
+
+
 
   const filteredPosts = posts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.department.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesFaculty = selectedFaculty === '' || post.faculty === selectedFaculty;
-    
+
+    const matchesFaculty =
+      selectedFaculty === "" || post.faculty === selectedFaculty;
+
     return matchesSearch && matchesFaculty;
   });
 
-  const faculties = [...new Set(posts.map(post => post.faculty))];
+  const faculties = [...new Set(posts.map((post) => post.faculty))];
 
   if (loading) {
     return (
@@ -50,7 +62,9 @@ const HomePage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Tüm Notlar</h1>
-        <p className="text-gray-600">Öğrenciler tarafından paylaşılan ders notlarını inceleyin</p>
+        <p className="text-gray-600">
+          Öğrenciler tarafından paylaşılan ders notlarını inceleyin
+        </p>
       </div>
 
       {/* Filters */}
@@ -89,7 +103,12 @@ const HomePage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredPosts.map((post) => (
-            <PostCard key={post._id} post={post} onSaveToggle={fetchPosts} />
+            <PostCard
+              key={getPostId(post)}
+              post={post}
+              onSaveToggle={fetchPosts}
+              onDelete={handlePostDelete}
+            />
           ))}
         </div>
       )}

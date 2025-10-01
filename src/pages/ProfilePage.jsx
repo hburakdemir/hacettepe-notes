@@ -1,47 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { postsAPI, savedPostsAPI } from '../services/api';
-import PostCard from '../components/PostCard';
-import { User, Bookmark, FileText, Loader } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { postsAPI, savedPostsAPI } from "../services/api";
+import PostCard from "../components/PostCard";
+import { User, Bookmark, FileText, Loader } from "lucide-react";
+import { useSavedPosts } from "../context/SavedPostContext";
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('my-posts');
+  const { savedPosts, fetchSavedPosts } = useSavedPosts();
+  const [savedPostsData, setSavedPostsData] = useState([]);
+  const [activeTab, setActiveTab] = useState("my-posts");
   const [myPosts, setMyPosts] = useState([]);
-  const [savedPosts, setSavedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Kullanıcının kendi postlarını getir
+  // gerçek id hangisi bilmiyorum deneye deneye buluyoruz :D
+  const getPostId = (post) =>
+    post._id || post.id || post.postId || post.post_id || post.ID;
+
   const fetchMyPosts = async () => {
     try {
-      setLoading(true);
-      const res = await postsAPI.getMyPosts(); // backend’de /posts/my-posts var
+      const res = await postsAPI.getMyPosts();
       setMyPosts(res.data);
     } catch (err) {
-      console.error("My posts fetch error:", err);
-    } finally {
-      setLoading(false);
+      console.error(" Kullanıcı postları hatası:", err);
+      setMyPosts([]);
     }
   };
 
-  // Kaydedilen postları getir
-  const fetchSavedPosts = async () => {
+  const fetchSavedPostsData = async () => {
     try {
-      setLoading(true);
       const res = await savedPostsAPI.getSavedPosts();
-      setSavedPosts(res.data);
+      setSavedPostsData(res.data);
     } catch (err) {
-      console.error("Saved posts fetch error:", err);
-      setSavedPosts([]);
-    } finally {
-      setLoading(false);
+      console.error("kaydedilen gönderiler gelmiyo:", err);
+      setSavedPostsData([]);
     }
   };
-
+  // İlk yüklemede hem kendi postlarını hem saved posts'ları getir
   useEffect(() => {
-    fetchMyPosts();
-    fetchSavedPosts();
+    const fetchAll = async () => {
+      setLoading(true);
+      await Promise.all([fetchMyPosts(), fetchSavedPostsData()]);
+      setLoading(false);
+    };
+    fetchAll();
   }, []);
+
+
+   const handlePostDelete = async(deletedId) => {
+    setMyPosts(prev => prev.filter(p=> String(getPostId(p)) !== String(deletedId)));
+  };
+
+
 
   if (loading) {
     return (
@@ -60,22 +70,23 @@ const ProfilePage = () => {
             <User className="h-10 w-10 text-primary-600" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{user?.username}</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {user?.username}
+            </h1>
             <p className="text-gray-600">{user?.email}</p>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="bg-white rounded-lg shadow-md mb-8">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8 px-6">
             <button
-              onClick={() => setActiveTab('my-posts')}
+              onClick={() => setActiveTab("my-posts")}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition ${
-                activeTab === 'my-posts'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                activeTab === "my-posts"
+                  ? "border-primary-600 text-primary-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -84,11 +95,11 @@ const ProfilePage = () => {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab('saved-posts')}
+              onClick={() => setActiveTab("saved-posts")}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition ${
-                activeTab === 'saved-posts'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                activeTab === "saved-posts"
+                  ? "border-primary-600 text-primary-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -100,36 +111,51 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Content */}
       <div>
-        {activeTab === 'my-posts' && (
+        {activeTab === "my-posts" && (
           <div>
             {myPosts.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
                 <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">Henüz not paylaşmadınız.</p>
+                <p className="text-gray-500 text-lg">
+                  Henüz not paylaşmadınız.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {myPosts.map((post) => (
-                  <PostCard key={post.id} post={post} onSaveToggle={fetchMyPosts} />
+                  <PostCard
+                    key={getPostId(post)}
+                    post={post}
+                    onSaveToggle={fetchSavedPosts} 
+                    onDelete={handlePostDelete}
+
+                  />
                 ))}
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'saved-posts' && (
+        {activeTab === "saved-posts" && (
           <div>
-            {savedPosts.length === 0 ? (
+            {savedPostsData.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
                 <Bookmark className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">Henüz not kaydetmediniz.</p>
+                <p className="text-gray-500 text-lg">
+                  Henüz not kaydetmediniz.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {savedPosts.map((post) => (
-                  <PostCard key={post.id} post={post} onSaveToggle={fetchSavedPosts} />
+                {savedPostsData.map((post) => (
+                  <PostCard
+                    key={getPostId(post)}
+                    post={post}
+                    isSaved={true}
+                    onSaveToggle={fetchSavedPostsData}
+                    onDelete={handlePostDelete}
+                  />
                 ))}
               </div>
             )}
