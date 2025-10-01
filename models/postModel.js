@@ -12,7 +12,7 @@ export async function addPostModel({ user_id, faculty, department, title, conten
 }
 
 // Tüm postları kullanıcı bilgisiyle getir
-export async function getAllPostsWithUsers() {
+export async function getAllPostsWithUsersModel() {
   const res = await pool.query(`
     SELECT 
       posts.id AS post_id,
@@ -34,7 +34,7 @@ export async function getAllPostsWithUsers() {
 }
 
 
-export async function getPostByUserId(userId) {
+export async function getPostByUserIdModel(userId) {
   const res = await pool.query(`
     SELECT
       posts.id AS post_id,
@@ -55,3 +55,10 @@ export async function getPostByUserId(userId) {
   
   return res.rows;
 }
+
+
+export const deletePostByIdModel = async (postId, userId) => {
+  await pool.query(`
+    DELETE FROM posts where id = $1 AND user_id = $2`
+    , [postId, userId]);
+};

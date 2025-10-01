@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { addPostController, getAllPostsController, getMyPostController } from '../controllers/postController.js';
+import { addPostController, getAllPostsController, getMyPostController, deletePostController} from '../controllers/postController.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -29,5 +29,6 @@ const upload = multer({
 router.post('/addpost', authenticateToken, upload.single('file'), addPostController);
 router.get('/getpost', getAllPostsController);
 router.get('/my-posts',authenticateToken, getMyPostController)
+router.delete('/deletepost/:postId',authenticateToken, deletePostController)
 
 export default router;

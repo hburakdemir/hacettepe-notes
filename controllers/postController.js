@@ -1,4 +1,4 @@
-import { addPostModel,getAllPostsWithUsers, getPostByUserId } from '../models/postModel.js';
+import { addPostModel,getAllPostsWithUsersModel, getPostByUserIdModel,deletePostByIdModel } from '../models/postModel.js';
 
 export const addPostController = async (req, res) => {
   try {
@@ -33,7 +33,7 @@ export const addPostController = async (req, res) => {
 
 export async function getAllPostsController(req, res) {
   try {
-    const posts = await getAllPostsWithUsers();
+    const posts = await getAllPostsWithUsersModel();
     res.json(posts);
   } catch (err) {
     console.error('Postlar alınamadı:', err);
@@ -45,7 +45,7 @@ export async function getAllPostsController(req, res) {
 export const getMyPostController = async(req,res) => {
   try {
     const userId = req.user.userId;
-    const posts = await getPostByUserId(userId);
+    const posts = await getPostByUserIdModel(userId);
     res.json(posts);
   }
   catch(err){
@@ -53,3 +53,16 @@ export const getMyPostController = async(req,res) => {
     res.status(500).json({error: 'kendi postları alınamadı profil'});
   }
 }
+
+
+export const deletePostController = async (req,res) => {
+  const userId = req.user.userId;
+  const postId = req.params.postId;
+  try {
+    await deletePostByIdModel(postId,userId);
+    res.json({message:'post başarıyla silindi'});
+  } catch (err) {
+    console.error('post silinemedi',err);
+    res.stats(500).json({errror:'post silinemiyor'});
+  }
+};
