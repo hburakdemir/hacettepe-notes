@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 40 * 1024 * 1024 }, // 40MB sınırı
+  limits: { fileSize: 30 * 1024 * 1024 }, // 40MB sınırı
 });
 
 // Burada sırayla:
