@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import bolumData from '../data/departments';
-import { BookOpen, ChevronRight, Search } from 'lucide-react';
+import { Library, ChevronRight, Search } from 'lucide-react';
 
 const DepartmentsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,18 +31,18 @@ const DepartmentsPage = () => {
       {/* Search */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#5A9690]" />
           <input
             type="text"
             placeholder="Fakülte veya bölüm ara..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg  focus:border-transparent"
           />
         </div>
       </div>
 
-      {/* Faculties List */}
+    {/* fakülte listesi */}
       <div className="space-y-4">
         {filteredFaculties.map((faculty) => (
           <div key={faculty} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -51,11 +51,11 @@ const DepartmentsPage = () => {
               className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition"
             >
               <div className="flex items-center space-x-3">
-                <BookOpen className="h-6 w-6 text-primary-600" />
+                <Library className="h-6 w-6 text-[#5A9690]" />
                 <h2 className="text-lg font-semibold text-gray-900">{faculty}</h2>
               </div>
               <ChevronRight
-                className={`h-5 w-5 text-gray-400 transition-transform ${
+                className={`h-5 w-5 text-[#2F5755] transition-transform ${
                   expandedFaculty === faculty ? 'rotate-90' : ''
                 }`}
               />
@@ -68,9 +68,9 @@ const DepartmentsPage = () => {
                     <Link
                       key={department}
                       to={`/department/${encodeURIComponent(faculty)}/${encodeURIComponent(department)}`}
-                      className="block p-3 bg-white rounded-lg hover:bg-primary-50 hover:border-primary-300 border border-gray-200 transition"
+                      className="block p-3 bg-white rounded-lg hover:bg-[#E0D9D9]  border border-gray-400 transition hover:text-red-800"
                     >
-                      <span className="text-sm font-medium text-gray-700 hover:text-primary-700">
+                      <span className="text-sm font-medium text-gray-700 ">
                         {department}
                       </span>
                     </Link>

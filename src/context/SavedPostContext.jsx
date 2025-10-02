@@ -9,9 +9,10 @@ export const useSavedPosts = () => useContext(SavedPostsContext);
 export const SavedPostsProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const [savedPosts, setSavedPosts] = useState([]);
+  
   const [loading, setLoading] = useState(true);
 
-  // Backend’den gelen ID’leri normalize et ve string olarak kaydet
+
   const fetchSavedPosts = async () => {
     if (!isAuthenticated) return;
     setLoading(true);
@@ -20,7 +21,7 @@ export const SavedPostsProvider = ({ children }) => {
       const savedIds = res.data.map(p => String(p._id || p.id || p.postId || p.post_id));
       setSavedPosts(savedIds);
     } catch (err) {
-      console.error('❌ Saved posts fetch error:', err);
+      console.error('Saved posts fetch error:', err);
       setSavedPosts([]);
     } finally {
       setLoading(false);

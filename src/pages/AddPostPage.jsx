@@ -184,7 +184,7 @@ const AddPostPage = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Dosya Yükle * (Max: 40MB)
+              Dosya Yükle * (Max: 30MB)
             </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-primary-400 transition">
               <div className="space-y-1 text-center">
@@ -192,7 +192,7 @@ const AddPostPage = () => {
                 <div className="flex text-sm text-gray-600">
                   <label
                     htmlFor="file-upload"
-                    className="relative cursor-pointer bg-white rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none"
+                    className="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none"
                   >
                     <span>Dosya seçin</span>
                     <input
@@ -206,7 +206,7 @@ const AddPostPage = () => {
                   </label>
                   <p className="pl-1">veya sürükleyip bırakın</p>
                 </div>
-                <p className="text-xs text-gray-500">PDF, DOC, PPT, JPG (max. 40MB)</p>
+                <p className="text-xs text-gray-500">PDF, DOC, PPT, JPG (max. 30MB)</p>
                 {file && (
                   <div className="flex items-center justify-center space-x-2 text-sm text-green-600 mt-2">
                     <FileText className="h-5 w-5" />
@@ -221,14 +221,14 @@ const AddPostPage = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="btn-secondary"
+              className="btn-bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className=" bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Paylaşılıyor...' : 'Paylaş'}
             </button>

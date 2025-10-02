@@ -10,10 +10,13 @@ const PostCard = ({ post, onDelete }) => {
   const [loading, setLoading] = useState(false);
   const user = useAuth();
 
+  console.log("postlar", post);
 
-  const postOwner = post.author?._id === user.user?._id;
 
-  // Post ID normalize
+const postOwner = post.user_id === user.user?._id;
+  console.log("post sahibi :::", postOwner);
+
+  // Post ID normalize deneme yanılma 
   const getPostId = (post) =>
     post._id || post.id || post.postId || post.post_id;
   const postId = String(getPostId(post));
@@ -42,7 +45,7 @@ const PostCard = ({ post, onDelete }) => {
       return;
     }
     if (!postId) {
-      console.error("post ıd yok ", post9);
+      console.error("post ıd yok ", post);
       alert(
         "post zaten silinmiş, sayfayı yenileyin ya da daha sonra tekrar deneyin"
       );
@@ -77,29 +80,27 @@ const PostCard = ({ post, onDelete }) => {
   };
 
   const postData = {
-    title: post.title,
-    content: post.content || post.content,
-    faculty: post.faculty,
-    department: post.department,
-    author: {
-      username: post.username || post.author?.username,
-      full_name: post.full_name || post.author?.full_name,
-    },
-    createdAt: post.created_at || post.createdAt,
-    fileUrl: post.file_url || post.fileUrl,
+    title:post.title,
+    content:post.content,
+    faculty:post.faculty,
+    department:post.department,
+    username: post.username,
+    full_name: post.full_name,
+    createdAt: post.createdAt || post.created_at,
+    fileUrl: post.fileUrl || post.file_url,
   };
 
   return (
-    <div className="card p-6">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            {postData.title}
+           {postData.title}
           </h3>
-          <p className="text-gray-600 text-sm mb-3">{postData.content}</p>
+          <p className="text-gray-800 text-sm mb-3">{postData.content}</p>
         </div>
 
-        {isAuthenticated && user?.username === postOwner && (
+        {isAuthenticated && postOwner && (
           <button
             onClick={handleDelete}
             disabled={loading}
@@ -117,7 +118,7 @@ const PostCard = ({ post, onDelete }) => {
           >
             <Bookmark
               className={`h-6 w-6 ${
-                isSaved ? "text-primary-600 fill-primary-600" : "text-gray-400"
+                isSaved ? "text-[#003161] fill-[#003161]" : "text-gray-900"
               }`}
             />
           </button>
@@ -125,10 +126,10 @@ const PostCard = ({ post, onDelete }) => {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-700">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#2F5755] text-white">
           {postData.faculty}
         </span>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5A9690] text-white">
           {postData.department}
         </span>
       </div>
@@ -137,7 +138,7 @@ const PostCard = ({ post, onDelete }) => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
             <User className="h-4 w-4" />
-            <span>{postData.author.username || "Anonim"}</span>
+            <span>{postData.username || "Anonim"}</span>
           </div>
           <div className="flex items-center space-x-1">
             <Calendar className="h-4 w-4" />

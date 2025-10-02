@@ -28,12 +28,19 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error('API Hatası:', error.response?.status, error.response?.data?.message || error.message);
+   
+    // Login ve register endpoint'lerini kontrol dışında tut
+    const isAuthEndpoint = error.config?.url?.includes('/auth/login') || 
+                          error.config?.url?.includes('/auth/register');
     
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && 403 && !isAuthEndpoint) {
+      // Sadece auth endpoint'leri dışındaki isteklerde logout yap
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('tokenTimestamp');
       window.location.href = '/login';
     }
+    
     return Promise.reject(error);
   }
 );
@@ -47,14 +54,14 @@ export const authAPI = {
 // Posts API
 export const postsAPI = {
   getAllPosts: () => api.get('/posts/getpost'),
-  getMyPosts: () => api.get('/posts/my-posts'), 
+  getMyPosts: () => api.get('/posts/my-posts'),
   addPost: (formData) => {return api.post('/posts/addpost', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
-  deletePost:(postId) => api.delete(`/posts/deletepost/${postId}`),
+  deletePost: (postId) => api.delete(`/posts/deletepost/${postId}`),
 };
 
 // Saved Posts API

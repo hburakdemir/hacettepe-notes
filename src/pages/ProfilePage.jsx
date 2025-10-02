@@ -46,12 +46,11 @@ const ProfilePage = () => {
     fetchAll();
   }, []);
 
-
-   const handlePostDelete = async(deletedId) => {
-    setMyPosts(prev => prev.filter(p=> String(getPostId(p)) !== String(deletedId)));
+  const handlePostDelete = async (deletedId) => {
+    setMyPosts((prev) =>
+      prev.filter((p) => String(getPostId(p)) !== String(deletedId))
+    );
   };
-
-
 
   if (loading) {
     return (
@@ -63,11 +62,12 @@ const ProfilePage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Profile Header */}
+
       <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center justify-center w-20 h-20 rounded-full bg-primary-100">
-            <User className="h-10 w-10 text-primary-600" />
+        <div className="flex items-center space-x-4"> 
+          {/* profil sola mı yaslı dursun sağa mı ona göre jccenter ekle */}
+          <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#003161]">
+            <User className="h-10 w-10 text-white" />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
@@ -83,9 +83,9 @@ const ProfilePage = () => {
           <nav className="flex space-x-8 px-6">
             <button
               onClick={() => setActiveTab("my-posts")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition ${
+              className={`py-4 px-1 border-b-2 ont-medium text-sm transition ${
                 activeTab === "my-posts"
-                  ? "border-primary-600 text-primary-600"
+                  ? "border-blue-800 text-blue-900"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
@@ -98,7 +98,7 @@ const ProfilePage = () => {
               onClick={() => setActiveTab("saved-posts")}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition ${
                 activeTab === "saved-posts"
-                  ? "border-primary-600 text-primary-600"
+                  ? "border-primary-800 text-blue-900"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
@@ -122,15 +122,15 @@ const ProfilePage = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="columns-1 md:columns-2 gap-6 space-y-6">
                 {myPosts.map((post) => (
-                  <PostCard
-                    key={getPostId(post)}
-                    post={post}
-                    onSaveToggle={fetchSavedPosts} 
-                    onDelete={handlePostDelete}
-
-                  />
+                  <div key={getPostId(post)} className="break-inside-avoid">
+                    <PostCard
+                      post={post}
+                      onSaveToggle={fetchSavedPosts}
+                      onDelete={handlePostDelete}
+                    />
+                  </div>
                 ))}
               </div>
             )}
@@ -147,15 +147,16 @@ const ProfilePage = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="columns-1 md:columns-2  gap-6 space-y-6">
                 {savedPostsData.map((post) => (
-                  <PostCard
-                    key={getPostId(post)}
-                    post={post}
-                    isSaved={true}
-                    onSaveToggle={fetchSavedPostsData}
-                    onDelete={handlePostDelete}
-                  />
+                  <div key={getPostId(post)} className="break-inside-avoid">
+                    <PostCard
+                      post={post}
+                      isSaved={true}
+                      onSaveToggle={fetchSavedPostsData}
+                      onDelete={handlePostDelete}
+                    />
+                  </div>
                 ))}
               </div>
             )}
