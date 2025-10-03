@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useSavedPosts } from "../context/SavedPostContext";
 import { postsAPI } from "../services/api";
 
-const PostCard = ({ post, onDelete }) => {
+const PostCard = ({ post, onDelete, showStatus = false }) => {
   const { savedPosts, toggleSavePost } = useSavedPosts();
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -12,11 +12,10 @@ const PostCard = ({ post, onDelete }) => {
 
   console.log("postlar", post);
 
-
-const postOwner = post.user_id === user.user?._id;
+  const postOwner = post.user_id === user.user?._id;
   console.log("post sahibi :::", postOwner);
 
-  // Post ID normalize deneme yanılma 
+  // Post ID normalize deneme yanılma
   const getPostId = (post) =>
     post._id || post.id || post.postId || post.post_id;
   const postId = String(getPostId(post));
@@ -51,7 +50,7 @@ const postOwner = post.user_id === user.user?._id;
       );
       return;
     }
-    if (!window.confirm("Bu gönderiyi silicek misiniz ?")) {
+    if (!window.confirm("Bu gönderiyi silecek misiniz ?")) {
       return;
     }
 
@@ -80,22 +79,58 @@ const postOwner = post.user_id === user.user?._id;
   };
 
   const postData = {
-    title:post.title,
-    content:post.content,
-    faculty:post.faculty,
-    department:post.department,
+    title: post.title,
+    content: post.content,
+    faculty: post.faculty,
+    department: post.department,
     username: post.username,
     full_name: post.full_name,
     createdAt: post.createdAt || post.created_at,
     fileUrl: post.fileUrl || post.file_url,
+    status: post.status || "pending",
   };
+
+  // status badge renkleri
+  const getStatusBadge = (status) => {
+    const badges = {
+      approved: {
+        bg: "bg-green-100",
+        text: "text-green-800",
+        label: "Onaylandı",
+      },
+      pending: {
+        bg: "bg-yellow-100",
+        text: "text-yellow-800",
+        label: "Onay Bekliyor",
+      },
+      rejected: {
+        bg: "bg-red-100",
+        text: "text-red-800",
+        label: "Reddedildi",
+      },
+    };
+    return badges[status] || badges.pending;
+  };
+
+  const statusBadge = getStatusBadge(postData.status);
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
+          {/* Status Badge - Sadece showStatus true ise göster */}
+          {showStatus && (
+            <div className="mb-2">
+              <span
+                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusBadge.bg} ${statusBadge.text}`}
+              >
+                {statusBadge.label}
+              </span>
+            </div>
+          )}
+
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-           {postData.title}
+            {postData.title}
           </h3>
           <p className="text-gray-800 text-sm mb-3">{postData.content}</p>
         </div>
@@ -146,7 +181,6 @@ const postOwner = post.user_id === user.user?._id;
           </div>
         </div>
       </div>
-
       {postData.fileUrl && (
         <a
           href={postData.fileUrl}

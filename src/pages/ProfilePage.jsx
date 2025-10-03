@@ -13,7 +13,6 @@ const ProfilePage = () => {
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // gerçek id hangisi bilmiyorum deneye deneye buluyoruz :D
   const getPostId = (post) =>
     post._id || post.id || post.postId || post.post_id || post.ID;
 
@@ -36,7 +35,7 @@ const ProfilePage = () => {
       setSavedPostsData([]);
     }
   };
-  // İlk yüklemede hem kendi postlarını hem saved posts'ları getir
+
   useEffect(() => {
     const fetchAll = async () => {
       setLoading(true);
@@ -55,17 +54,15 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader className="h-12 w-12 animate-spin text-primary-600" />
+        <Loader className="h-12 w-12 animate-spin text-[#2F5755]" />
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
       <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <div className="flex items-center space-x-4"> 
-          {/* profil sola mı yaslı dursun sağa mı ona göre jccenter ekle */}
+        <div className="flex items-center space-x-4">
           <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#003161]">
             <User className="h-10 w-10 text-white" />
           </div>
@@ -129,6 +126,7 @@ const ProfilePage = () => {
                       post={post}
                       onSaveToggle={fetchSavedPosts}
                       onDelete={handlePostDelete}
+                      showStatus={true}
                     />
                   </div>
                 ))}
@@ -155,6 +153,7 @@ const ProfilePage = () => {
                       isSaved={true}
                       onSaveToggle={fetchSavedPostsData}
                       onDelete={handlePostDelete}
+                      showStatus={false}
                     />
                   </div>
                 ))}

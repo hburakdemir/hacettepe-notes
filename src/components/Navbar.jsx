@@ -3,14 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   Home,
-  BookOpen,
+  Library,
   LogOut,
   Menu,
   X,
   PlusCircle,
-  ThumbsUp,
   LucideBadgeHelp,
+  ShieldOff,
 } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -37,6 +38,16 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
+            {isAuthenticated &&
+              (user?.role === "admin" || user?.role === "moderator") && (
+                <Link
+                  to="/admin"
+                  className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755] px-3 py-2 rounded-md transition"
+                >
+                  <ShieldOff className="h-5 w-5" />
+                  <span>Admin Panel</span>
+                </Link>
+              )}
             <Link
               to="/"
               className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
@@ -48,7 +59,7 @@ const Navbar = () => {
               to="/departments"
               className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
             >
-              <BookOpen className="h-5 w-5" />
+              <Library className="h-6 w-6" />
               <span>Bölümler</span>
             </Link>
 
@@ -72,12 +83,12 @@ const Navbar = () => {
                   to="/profile"
                   className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
                 >
-                  <ThumbsUp className="h-5 w-5" />
+                  <Icon icon="game-icons:deer-head" className="h-8 w-8" />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 text-red-600 hover:text-red-700 px-3 py-2 rounded-md transition"
+                  className="flex items-center space-x-1 text-[#660B05] hover:text-[#e28882] px-3 py-2 rounded-md transition"
                 >
                   <LogOut className="h-5 w-5" />
                   <span>Çıkış</span>
@@ -114,9 +125,20 @@ const Navbar = () => {
           </button>
         </div>
 
-       {/* hamburger içi */}
+        {/* hamburger içi */}
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-2">
+            {isAuthenticated &&
+              (user?.role === "admin" || user?.role === "moderator") && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
+                  <ShieldOff className="h-5 w-5" />
+                  <span>Admin Panel</span>
+                </Link>
+              )}
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
@@ -130,7 +152,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
               className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
             >
-              <BookOpen className="h-5 w-5" />
+              <Library className="h-5 w-5" />
               <span>Bölümler</span>
             </Link>
 
@@ -149,7 +171,7 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
                 >
-                  <ThumbsUp className="h-5 w-5" />
+                  <Icon icon="game-icons:deer-head" className="h-5 w-5" />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
                 <button

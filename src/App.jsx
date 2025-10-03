@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AddPostPage from "./pages/AddPostPage";
 import NotFound from "./pages/error/NotFound";
 import Help from "./pages/Help";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/departments" element={<DepartmentsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/admin" element={<AdminPanel />} />
         <Route
           path="/department/:faculty/:department"
           element={<DepartmentDetailPage />}

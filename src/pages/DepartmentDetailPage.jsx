@@ -43,7 +43,7 @@ const DepartmentDetailPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader className="h-12 w-12 animate-spin text-primary-600" />
+        <Loader className="h-12 w-12 animate-spin text-[#2F5755]" />
       </div>
     );
   }
