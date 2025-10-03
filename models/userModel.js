@@ -1,25 +1,45 @@
 import pool from '../db.js';
 
-export async function createUser({ full_name, username, email, phone, passwordHash }) {
-  const query = `
-    INSERT INTO users (full_name, username, email, phone, password)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING id, full_name, username, email, phone
-  `;
-  const values = [full_name, username, email, phone, passwordHash];
-
-  const result = await pool.query(query, values);
-  return result.rows[0];
+// Tüm kullanıcıları getir
+export async function getAllUsersModel() {
+  try {
+    const res = await pool.query(
+      `SELECT id, full_name, username, email, phone, role 
+       FROM users 
+       ORDER BY id DESC`
+    );
+    return res.rows;
+  } catch (err) {
+    console.error('❌ getAllUsersModel hatası:', err);
+    throw err;
+  }
 }
 
-export async function getUserByUsername(username) {
-  const query = `SELECT * FROM users WHERE username = $1`;
-  const result = await pool.query(query, [username]);
-  return result.rows[0];
+// Kullanıcı rolünü güncelle
+export async function updateUserRoleModel(userId, newRole) {
+  try {
+    const res = await pool.query(
+      `UPDATE users SET role = $1 WHERE id = $2 
+       RETURNING id, full_name, username, email, role`,
+      [newRole, userId]
+    );
+    return res.rows[0];
+  } catch (err) {
+    console.error('❌ updateUserRoleModel hatası:', err);
+    throw err;
+  }
 }
 
-export async function getUserByEmail(email) {
-  const query = `SELECT * FROM users WHERE email = $1`;
-  const result = await pool.query(query, [email]);
-  return result.rows[0];
+// Kullanıcıyı ID ile getir
+export async function getUserByIdModel(userId) {
+  try {
+    const res = await pool.query(
+      `SELECT id, full_name, username, email, role FROM users WHERE id = $1`,
+      [userId]
+    );
+    return res.rows[0];
+  } catch (err) {
+    console.error('❌ getUserByIdModel hatası:', err);
+    throw err;
+  }
 }

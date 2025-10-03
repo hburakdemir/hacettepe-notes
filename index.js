@@ -4,11 +4,12 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import authRoutes from './routes/authRoutes.js';
+import registerRoutes from './routes/registerRoutes.js';
 import loginRoutes from './routes/loginRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import savedPostRoutes from './routes/savedpostRoutes.js';
 import updateprofileRutes from './routes/updateprofileRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 
 dotenv.config();
@@ -37,9 +38,10 @@ if (!fs.existsSync('./uploads')) {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-app.use('/api/auth', authRoutes);
 app.use('/api/auth', loginRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api',userRoutes);
+app.use('/api/auth', registerRoutes);
 app.use('/api/saved-posts', savedPostRoutes);
 app.use('/api/update-profile', updateprofileRutes);
 

@@ -4,7 +4,7 @@ import {
   createUser,
   getUserByUsername,
   getUserByEmail,
-} from "../models/userModel.js";
+} from "../models/registerModel.js";
 import {
   isValidFullName,
   isValidPhone,

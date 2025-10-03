@@ -22,8 +22,13 @@ export async function login(req, res) {
       return res.status(401).json({ message: 'Kullanıcı bulunamadı veya şifre yanlış.' });
     }
 
+    // ÖNEMLİ: Token'a role eklendi
     const token = jwt.sign(
-      { userId: user.id, username: user.username },
+      { 
+        userId: user.id, 
+        username: user.username,
+        role: user.role || 'user'  // YENİ: Role bilgisi eklendi
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -37,10 +42,11 @@ export async function login(req, res) {
         username: user.username,
         email: user.email,
         phone: user.phone,
+        role: user.role || 'user'  // YENİ: Role bilgisi eklendi
       },
     });
   } catch (error) {
-      console.log('JWT_SECRET:', process.env.JWT_SECRET);
+    console.log('JWT_SECRET:', process.env.JWT_SECRET);
     console.error('Login hatası:', error);
 
     res.status(500).json({ message: 'Sunucu hatası.' });
