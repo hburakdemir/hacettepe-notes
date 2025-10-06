@@ -73,6 +73,7 @@ export const savedPostsAPI = {
 };
 
 // Profile API
+// bu api var ama frontendde yok gelicek
 export const profileAPI = {
   updateProfile: (profileData) => api.put('/update-profile/profile', profileData),
 };
@@ -84,6 +85,10 @@ export const adminAPI = {
 
   // Kullanıcı rolünü güncelle
   updateUserRole: (userId, role) => api.patch(`/users/${userId}/role`, { role }),
+
+
+  // Kullanıcı silme
+  deleteUser: (userId,role) => api.delete(`/users/${userId}`),
 
   // Onay bekleyen postları getir
   getPendingPosts: () => api.get('/posts/pending'),

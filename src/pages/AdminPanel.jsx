@@ -152,6 +152,21 @@ const AdminPanel = () => {
     }
   };
 
+  const handleUserDelete = async (userId) => {
+    if (!window.confirm("Bu kullanıcıyı silmek istediğine emin misin?")) {
+      return;
+    }
+    try {
+      const response = await adminAPI.deleteUser(userId);
+      console.log("silinen kullanıcı", response);
+      setAllUsers((prev) => prev.filter((user) => user.id !== userId));
+      alert("kullanıcı silindi");
+    } catch (err) {
+      alert("kullanıcı silinirken bi şeyler yanlış gitti");
+      console.error(err);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -587,7 +602,7 @@ const AdminPanel = () => {
                               {userItem.role || "user"}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-2">
                             <select
                               value={userItem.role || "user"}
                               onChange={(e) =>
@@ -600,6 +615,13 @@ const AdminPanel = () => {
                               <option value="moderator">Moderator</option>
                               <option value="admin">Admin</option>
                             </select>
+
+                            <button
+                              onClick={() => handleUserDelete(userItem.id)}
+                              className="text-[#660B05] hover:text-[#8C1007] "
+                            >
+                              <Trash2 className="h-6 w-6" />
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -635,6 +657,12 @@ const AdminPanel = () => {
                         >
                           {userItem.role || "user"}
                         </span>
+                         <button
+                              onClick={() => handleUserDelete(userItem.id)}
+                              className="text-[#660B05] hover:text-[#8C1007]"
+                            >
+                              <Trash2 className="h-6 w-6" />
+                            </button>
                       </div>
 
                       {/* bilgiler */}
@@ -658,6 +686,7 @@ const AdminPanel = () => {
                         <span className="text-sm text-gray-600">
                           Rol Değiştir:
                         </span>
+                        
                         <select
                           value={userItem.role || "user"}
                           onChange={(e) =>
@@ -666,6 +695,7 @@ const AdminPanel = () => {
                           className="border border-gray-300 rounded px-3 py-1.5 text-sm bg-white"
                           disabled={userItem.id === user?.id}
                         >
+                          
                           <option value="user">User</option>
                           <option value="moderator">Moderator</option>
                           <option value="admin">Admin</option>

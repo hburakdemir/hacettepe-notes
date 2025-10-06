@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import {UserPlus,Mail,Lock,User,AlertCircle, Eye,EyeOff,LucidePhone,} from "lucide-react";
+import {UserPlus,Mail,Lock,User,AlertCircle,Eye,EyeOff,LucidePhone,} from "lucide-react";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -21,40 +21,74 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  
+const isValidTurkishName = (name) => {
+  const allowedChars = " abcçdefgğhıijklmnoöprsştuüvyzABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
+  for (const ch of name) {
+    if (!allowedChars.includes(ch)) return false;
+  }
+  return true;
+};
+
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+     if (name === "phone") {
+    const onlyDigits = value.replace(/\D/g, "").slice(0, 11);
+    setFormData({ ...formData, [name]: onlyDigits });
+    setError("");
+    return;
+  }
+
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value.trimStart(), 
     });
     setError("");
   };
 
-  // Frontend validasyonları
+
   const validateForm = () => {
-    // Boş alan kontrolü
-    if (!formData.fullName.trim() || !formData.username.trim() || 
-        !formData.email.trim() || !formData.password || !formData.confirmPassword) {
+    const trimmedData = {
+      fullName: formData.fullName.trim(),
+      username: formData.username.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      phone: formData.phone.trim(),
+    };
+
+
+    if (
+      !trimmedData.fullName ||
+      !trimmedData.username ||
+      !trimmedData.email ||
+      !trimmedData.password ||
+      !trimmedData.confirmPassword
+    ) {
       setError("Lütfen zorunlu alanları doldurun");
       return false;
     }
 
-    // İsim validasyonu (sadece harfler ve boşluk)
-    const nameRegex = /^[a-zA-ZğüşöçİĞÜŞÖÇ\s]+$/;
-    if (!nameRegex.test(formData.fullName)) {
-      setError("İsim sadece harflerden oluşmalıdır");
-      return false;
-    }
+   
+
+if (!isValidTurkishName(trimmedData.fullName)) {
+  setError("İsim sadece Türkçe harf ve boşluk içerebilir");
+  return false;
+}
 
     // Email validasyonu
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(trimmedData.email)) {
       setError("Geçerli bir email adresi girin");
       return false;
     }
 
     // Telefon validasyonu (opsiyonel ama doldurulduysa)
-    if (formData.phone) {
-      const phoneDigits = formData.phone.replace(/\D/g, ''); // Sadece rakamları al
+    if (trimmedData.phone) {
+      const phoneDigits = trimmedData.phone.replace(/\D/g, "");
       if (phoneDigits.length !== 11) {
         setError("Telefon numarası 11 haneli olmalıdır (örn: 05551234567)");
         return false;
@@ -62,25 +96,22 @@ const RegisterPage = () => {
     }
 
     // Şifre validasyonu
-    if (formData.password.length < 5) {
+    if (trimmedData.password.length < 5) {
       setError("Şifre en az 5 karakter olmalıdır");
       return false;
     }
 
-    // Büyük harf kontrolü
-    if (!/[A-Z]/.test(formData.password)) {
+    if (!/[A-Z]/.test(trimmedData.password)) {
       setError("Şifre en az 1 büyük harf içermelidir");
       return false;
     }
 
-    // Noktalama işareti kontrolü
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(trimmedData.password)) {
       setError("Şifre en az 1 noktalama işareti içermelidir (!@#$%^&* vb.)");
       return false;
     }
 
-    // Şifre eşleşme kontrolü
-    if (formData.password !== formData.confirmPassword) {
+    if (trimmedData.password !== trimmedData.confirmPassword) {
       setError("Şifreler eşleşmiyor");
       return false;
     }
@@ -92,20 +123,17 @@ const RegisterPage = () => {
     e.preventDefault();
     setError("");
 
-    // Frontend validasyonu
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
 
     const result = await register({
-      fullName: formData.fullName,
-      username: formData.username,
-      email: formData.email,
+      fullName: formData.fullName.trim(),
+      username: formData.username.trim(),
+      email: formData.email.trim(),
       password: formData.password,
       passwordConfirm: formData.confirmPassword,
-      phone: formData.phone,
+      phone: formData.phone.trim(),
     });
 
     if (result.success) {
@@ -123,7 +151,7 @@ const RegisterPage = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2F5755] mb-4">
-            <UserPlus className="h-8 w-8 text-white" />
+              <UserPlus className="h-8 w-8 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Kayıt Ol</h2>
             <p className="text-gray-600 mt-2">Yeni hesap oluşturun</p>
@@ -137,6 +165,7 @@ const RegisterPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* İsim Soyisim */}
             <div>
               <label
                 htmlFor="fullName"
@@ -159,6 +188,7 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {/* Kullanıcı adı */}
             <div>
               <label
                 htmlFor="username"
@@ -181,6 +211,7 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {/* E-posta */}
             <div>
               <label
                 htmlFor="email"
@@ -197,12 +228,13 @@ const RegisterPage = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg  focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
                   placeholder="ornek@email.com"
                 />
               </div>
             </div>
 
+            {/* Şifre */}
             <div>
               <label
                 htmlFor="password"
@@ -239,6 +271,7 @@ const RegisterPage = () => {
               </p>
             </div>
 
+            {/* Şifre tekrar */}
             <div>
               <label
                 htmlFor="confirmPassword"
@@ -272,6 +305,7 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {/* Telefon */}
             <div>
               <label
                 htmlFor="phone"
@@ -287,7 +321,7 @@ const RegisterPage = () => {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg  focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
                   placeholder="05551234567"
                   maxLength="11"
                 />
