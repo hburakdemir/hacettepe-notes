@@ -10,10 +10,10 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
   const [loading, setLoading] = useState(false);
   const user = useAuth();
 
-  console.log("postlar", post);
+  // console.log("postlar", post);
 
   const postOwner = post.user_id === user.user?._id;
-  console.log("post sahibi :::", postOwner);
+  // console.log("post sahibi :::", postOwner);
 
   // Post ID normalize deneme yanılma
   const getPostId = (post) =>
@@ -28,7 +28,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     }
 
     if (!postId) {
-      console.error("❌ POST ID BULUNAMADI!", post);
+      // console.error(" POST ID BULUNAMADI!", post);
       alert("Post ID bulunamadı. Lütfen sayfayı yenileyin.");
       return;
     }
@@ -44,7 +44,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
       return;
     }
     if (!postId) {
-      console.error("post ıd yok ", post);
+      // console.error("post ıd yok ", post);
       alert(
         "post zaten silinmiş, sayfayı yenileyin ya da daha sonra tekrar deneyin"
       );
@@ -60,7 +60,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
       if (onDelete) onDelete(postId);
       alert("Gönderi başarıyla silindi");
     } catch (err) {
-      console.error("frontend silme hatası", err);
+      // console.error("frontend silme hatası", err);
       alert(
         "Gönderi silinirken bir hata oluştu, lütfen daha sonra tekrar deneyin"
       );

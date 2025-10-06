@@ -21,7 +21,7 @@ const ProfilePage = () => {
       const res = await postsAPI.getMyPosts();
       setMyPosts(res.data);
     } catch (err) {
-      console.error(" Kullanıcı postları hatası:", err);
+      // console.error(" Kullanıcı postları hatası:", err);
       setMyPosts([]);
     }
   };
@@ -31,7 +31,7 @@ const ProfilePage = () => {
       const res = await savedPostsAPI.getSavedPosts();
       setSavedPostsData(res.data);
     } catch (err) {
-      console.error("kaydedilen gönderiler gelmiyo:", err);
+      // console.error("kaydedilen gönderiler gelmiyo:", err);
       setSavedPostsData([]);
     }
   };

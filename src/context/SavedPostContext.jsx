@@ -21,7 +21,7 @@ export const SavedPostsProvider = ({ children }) => {
       const savedIds = res.data.map(p => String(p._id || p.id || p.postId || p.post_id));
       setSavedPosts(savedIds);
     } catch (err) {
-      console.error('Saved posts fetch error:', err);
+      // console.error('Saved posts fetch error:', err);
       setSavedPosts([]);
     } finally {
       setLoading(false);
@@ -41,7 +41,7 @@ export const SavedPostsProvider = ({ children }) => {
         setSavedPosts(prev => [...prev, id]);
       }
     } catch (err) {
-      console.error('❌ Toggle save post error:', err);
+      // console.error(' Toggle save post error:', err);
     }
   };
 

@@ -23,7 +23,7 @@ const HomePage = () => {
       const response = await postsAPI.getAllPosts();
       setPosts(response.data);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      // console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }

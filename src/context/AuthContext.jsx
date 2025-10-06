@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     if (user) {
       //  30 saniyede bir kontrol et
       expiryCheckInterval.current = setInterval(checkTokenExpiry, 30000);
-      console.log('Token expiry check started',checkTokenExpiry);
+      // console.log('Token expiry check started',checkTokenExpiry);
       
       return () => {
         if (expiryCheckInterval.current) {

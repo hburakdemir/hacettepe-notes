@@ -28,7 +28,7 @@ const DepartmentDetailPage = () => {
       );
       setPosts(filteredPosts);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      // console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }

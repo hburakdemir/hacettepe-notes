@@ -31,7 +31,7 @@ const AdminPanel = () => {
   }, [user]);
 
   const fetchData = async () => {
-    console.log("fetchData başladı...");
+    // console.log("fetchData başladı...");
     setLoading(true);
     try {
       const userRole = user?.role;
@@ -42,17 +42,17 @@ const AdminPanel = () => {
           const pendingRes = await adminAPI.getPendingPosts();
           setPendingPosts(pendingRes.data);
         } catch (err) {
-          console.error("Pending posts hatası:", err);
+          // console.error("Pending posts hatası:", err);
         }
 
         // Approved posts
         try {
           const approvedRes = await adminAPI.getApprovedPosts();
-          console.log(" APPROVED POSTS  DATA:", approvedRes.data);
+          // console.log(" APPROVED POSTS  DATA:", approvedRes.data);
           setApprovedPosts(approvedRes.data);
         } catch (err) {
-          console.error(" Approved posts hatası:", err);
-          console.error("Approved posts hatası:", err);
+          // console.error(" Approved posts hatası:", err);
+          // console.error("Approved posts hatası:", err);
         }
 
         // All posts with status (rejected için)
@@ -63,7 +63,7 @@ const AdminPanel = () => {
           );
           setRejectedPosts(rejected);
         } catch (err) {
-          console.error("All posts hatası:", err);
+          // console.error("All posts hatası:", err);
         }
       }
 
@@ -72,40 +72,40 @@ const AdminPanel = () => {
           const usersRes = await adminAPI.getAllUsers();
           setAllUsers(usersRes.data);
         } catch (err) {
-          console.error("Users hatası:", err);
+          // console.error("Users hatası:", err);
         }
       }
     } catch (err) {
-      console.error("Genel veri çekme hatası:", err);
+      // console.error("Genel veri çekme hatası:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleApprove = async (postId) => {
-    console.log(" Post onaylanıyor:", postId);
+    // console.log(" Post onaylanıyor:", postId);
     try {
       const response = await adminAPI.approvePost(postId);
-      console.log(" Approve response:", response);
+      // console.log(" Approve response:", response);
       alert("Post onaylandı!");
       fetchData();
     } catch (err) {
-      console.error(" Onaylama hatası:", err);
-      console.error(" Error response:", err.response);
+      // console.error(" Onaylama hatası:", err);
+      // console.error(" Error response:", err.response);
       alert("Post onaylanırken hata oluştu");
     }
   };
 
   const handleReject = async (postId) => {
-    console.log(" Post reddediliyor:", postId);
+    // console.log(" Post reddediliyor:", postId);
     try {
       const response = await adminAPI.rejectPost(postId);
-      console.log(" Reject response:", response);
+      // console.log(" Reject response:", response);
       alert("Post reddedildi!");
       fetchData();
     } catch (err) {
-      console.error(" Reddetme hatası:", err);
-      console.error("❌Error response:", err.response);
+      // console.error(" Reddetme hatası:", err);
+      // console.error("Error response:", err.response);
       alert("Post reddedilirken hata oluştu");
     }
   };
@@ -118,15 +118,15 @@ const AdminPanel = () => {
     ) {
       return;
     }
-    console.log(" Post siliniyor:", postId);
+    // console.log(" Post siliniyor:", postId);
     try {
       const response = await adminAPI.deletePostAdmin(postId);
-      console.log(" Delete response:", response);
+      // console.log(" Delete response:", response);
       alert("Post silindi!");
       fetchData();
     } catch (err) {
-      console.error(" Silme hatası:", err);
-      console.error(" Error response:", err.response);
+      // console.error(" Silme hatası:", err);
+      // console.error(" Error response:", err.response);
       alert("Post silinirken hata oluştu");
     }
   };
@@ -139,15 +139,15 @@ const AdminPanel = () => {
     ) {
       return;
     }
-    console.log(" Rol değiştiriliyor:", userId, "=>", newRole);
+    // console.log(" Rol değiştiriliyor:", userId, "=>", newRole);
     try {
       const response = await adminAPI.updateUserRole(userId, newRole);
-      console.log(" Role update response:", response);
+      // console.log(" Role update response:", response);
       alert("Kullanıcı rolü güncellendi!");
       fetchData();
     } catch (err) {
-      console.error(" Rol güncelleme hatası:", err);
-      console.error(" Error response:", err.response);
+      // console.error(" Rol güncelleme hatası:", err);
+      // console.error(" Error response:", err.response);
       alert("Rol güncellenirken hata oluştu");
     }
   };
