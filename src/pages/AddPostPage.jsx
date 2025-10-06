@@ -39,7 +39,7 @@ const AddPostPage = () => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      if (selectedFile.size > 40 * 1024 * 1024) {
+      if (selectedFile.size > 10 * 1024 * 1024) {
         setError('Dosya boyutu 40MB\'dan küçük olmalıdır');
         return;
       }
