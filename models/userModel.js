@@ -51,10 +51,9 @@ export async function deleteUserByAdminModel(userId,currentUserRole) {
       throw new Error('admin değilsin niye silmeye çalışıyorsun ???');
     }
 
-    const res = await pool.query(
-      `DELETE FROM users WHERE id = $1 RETURNING id, full_name, username, email,role`,
-      [userId]
-    );
+    await pool.query("UPDATE posts SET approved_by = NULL WHERE approved_by = $1", [userId]);
+const res = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id, full_name, username, email, role", [userId]);
+
     return res.rows[0];
   }catch (err) {
     console.error('deleteUserByAdminModel hatası backend',err);
