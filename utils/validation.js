@@ -1,5 +1,5 @@
 export function isValidFullName(name) {
-  return /^[A-Za-zğüşöçİĞÜŞÖÇ\s]+$/.test(name);
+  return /^[A-Za-zğüşöçİĞÜŞÖÇı\s]+$/.test(name);
 }
 
 export function isValidPhone(phone) {

@@ -51,7 +51,6 @@ export async function deleteUserByAdminModel(userId, currentUserRole) {
       throw new Error('Admin değilsin niye silmeye çalışıyorsun???');
     }
 
-    // Kullanıcının referans olduğu tüm sütunları null yap
     await pool.query("UPDATE posts SET approved_by = NULL WHERE approved_by = $1", [userId]);
     await pool.query("UPDATE posts SET rejected_by = NULL WHERE rejected_by = $1", [userId]);
 
