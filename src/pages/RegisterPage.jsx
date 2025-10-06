@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import {UserPlus,Mail,Lock,User,AlertCircle,Eye,EyeOff,LucidePhone,} from "lucide-react";
+import {
+  UserPlus,
+  Mail,
+  Lock,
+  User,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  LucidePhone,
+} from "lucide-react";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -20,35 +29,31 @@ const RegisterPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  
-const isValidTurkishName = (name) => {
-  const allowedChars = " abcçdefgğhıijklmnoöprsştuüvyzABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
-  for (const ch of name) {
-    if (!allowedChars.includes(ch)) return false;
-  }
-  return true;
-};
-
+  const isValidTurkishName = (name) => {
+    const allowedChars =
+      " abcçdefgğhıijklmnoöprsştuüvyzABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
+    for (const ch of name) {
+      if (!allowedChars.includes(ch)) return false;
+    }
+    return true;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-     if (name === "phone") {
-    const onlyDigits = value.replace(/\D/g, "").slice(0, 11);
-    setFormData({ ...formData, [name]: onlyDigits });
-    setError("");
-    return;
-  }
-
+    if (name === "phone") {
+      const onlyDigits = value.replace(/\D/g, "").slice(0, 11);
+      setFormData({ ...formData, [name]: onlyDigits });
+      setError("");
+      return;
+    }
 
     setFormData({
       ...formData,
-      [name]: value.trimStart(), 
+      [name]: value.trimStart(),
     });
     setError("");
   };
-
 
   const validateForm = () => {
     const trimmedData = {
@@ -59,7 +64,6 @@ const isValidTurkishName = (name) => {
       confirmPassword: formData.confirmPassword,
       phone: formData.phone.trim(),
     };
-
 
     if (
       !trimmedData.fullName ||
@@ -72,12 +76,10 @@ const isValidTurkishName = (name) => {
       return false;
     }
 
-   
-
-if (!isValidTurkishName(trimmedData.fullName)) {
-  setError("İsim sadece Türkçe harf ve boşluk içerebilir");
-  return false;
-}
+    if (!isValidTurkishName(trimmedData.fullName)) {
+      setError("İsim sadece Türkçe harf ve boşluk içerebilir");
+      return false;
+    }
 
     // Email validasyonu
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -183,7 +185,7 @@ if (!isValidTurkishName(trimmedData.fullName)) {
                   value={formData.fullName}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
-                  placeholder="Burak Demir"
+                  placeholder="isim Soyisim"
                 />
               </div>
             </div>
@@ -206,7 +208,7 @@ if (!isValidTurkishName(trimmedData.fullName)) {
                   value={formData.username}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
-                  placeholder="kullaniciadi"
+                  placeholder="Kullanıcı Adınız"
                 />
               </div>
             </div>
@@ -229,7 +231,7 @@ if (!isValidTurkishName(trimmedData.fullName)) {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
-                  placeholder="ornek@email.com"
+                  placeholder="ornek@gmail.com"
                 />
               </div>
             </div>
