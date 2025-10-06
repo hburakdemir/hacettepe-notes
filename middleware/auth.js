@@ -21,7 +21,7 @@ export function authenticateToken(req, res, next) {
   });
 }
 
-// YENİ: Rol kontrolü middleware'i
+// artık yeni değil :D rol kontrolü middleware'i
 export function checkRole(...allowedRoles) {
   return (req, res, next) => {
     if (!req.user || !req.user.role) {
@@ -40,7 +40,7 @@ export function checkRole(...allowedRoles) {
   };
 }
 
-// YENİ: Post sahibi veya moderator/admin kontrolü
+// post sahibi veya moderator/admin kontrolü
 export async function checkPostOwnerOrModerator(req, res, next) {
   try {
     const postId = req.params.postId;
@@ -52,7 +52,7 @@ export async function checkPostOwnerOrModerator(req, res, next) {
       return next();
     }
 
-    // User ise sadece kendi postunu silebilir
+    // user ise sadece kendi postunu silebilir
     const post = await getPostOwnerModel(postId);
     if (!post) {
       return res.status(404).json({ message: 'Post bulunamadı' });

@@ -43,3 +43,21 @@ export async function getUserByIdModel(userId) {
     throw err;
   }
 }
+
+
+export async function deleteUserByAdminModel(userId,currentUserRole) {
+  try {
+    if(currentUserRole !== 'admin'){
+      throw new Error('admin değilsin niye silmeye çalışıyorsun ???');
+    }
+
+    const res = await pool.query(
+      `DELETE FROM users WHERE id = $1 RETURNING id, full_name, username, email,role`,
+      [userId]
+    );
+    return res.rows[0];
+  }catch (err) {
+    console.error('deleteUserByAdminModel hatası backend',err);
+   throw err;
+  }
+}

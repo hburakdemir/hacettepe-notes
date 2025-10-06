@@ -1,4 +1,4 @@
-import { getAllUsersModel, updateUserRoleModel } from '../models/userModel.js';
+import { deleteUserByAdminModel, getAllUsersModel, updateUserRoleModel ,} from '../models/userModel.js';
 
 // Tüm kullanıcıları getir
 export const getAllUsersController = async (req, res) => {
@@ -38,3 +38,21 @@ export const updateUserRoleController = async (req, res) => {
   }
 };
 
+
+
+export const deleteUserByAdminController = async(req,res) => {
+  try {
+   const {id} = req.params;
+   const currentUserRole = req.user.role;
+
+   const deletedUser = await deleteUserByAdminModel(id,currentUserRole);
+
+   if(!deletedUser){
+    return res.status(404).json({message: 'silmeye çalıştığın kullanıcı yok'});
+   }
+   res.json({message:'kullanıcı silindi',user:deletedUser});
+  } catch(err) {
+    console.error('kullanıcı silinemedi userController hatası',err);
+    res.status(500).json({error:'kullanıcı silinemedi sunucu hatası'})
+  }
+}

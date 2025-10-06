@@ -13,13 +13,13 @@ export async function login(req, res) {
     const user = await getUserByUsername(username);
 
     if (!user) {
-      return res.status(401).json({ message: 'Kullanıcı bulunamadı veya şifre yanlış.' });
+      return res.status(401).json({ message: 'Kullanıcı adı ya da şifre yanlış ama hangisi söylemem' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: 'Kullanıcı bulunamadı veya şifre yanlış.' });
+      return res.status(401).json({ message: 'Kullanıcı adı ya da şifre yanlış ama hangisi söylemem' });
     }
 
     // ÖNEMLİ: Token'a role eklendi

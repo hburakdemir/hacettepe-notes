@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsersController, updateUserRoleController } from '../controllers/userController.js';
+import { getAllUsersController, updateUserRoleController,deleteUserByAdminController } from '../controllers/userController.js';
 import { authenticateToken, checkRole } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -9,5 +9,8 @@ router.get('/users', authenticateToken, checkRole('admin'), getAllUsersControlle
 
 // Kullanıcı rolünü güncelle (sadece admin)
 router.patch('/users/:userId/role', authenticateToken, checkRole('admin'), updateUserRoleController);
+
+
+router.delete('/users/:id',authenticateToken,checkRole('admin'),deleteUserByAdminController);
 
 export default router;
