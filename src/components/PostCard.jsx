@@ -69,6 +69,19 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     }
   };
 
+  const getFileUrl = (fileUrl) => {
+  const apiUrl = import.meta.env.VITE_API_URL.replace('/api', '');
+  
+  if (fileUrl.startsWith('/uploads')) {
+    return `${apiUrl}${fileUrl}`;
+  }
+  
+  if (!fileUrl.startsWith('/')) {
+    fileUrl = '/' + fileUrl;
+  }
+  return `${apiUrl}/uploads${fileUrl}`;
+};
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("tr-TR", {
@@ -183,7 +196,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
       </div>
       {postData.fileUrl && (
         <a
-          href={postData.fileUrl}
+          href={getFileUrl(post.file_url)}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"

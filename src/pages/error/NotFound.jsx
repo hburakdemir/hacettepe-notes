@@ -16,7 +16,7 @@ const notFound = () => {
         </div>
         <div className="bg-slate-600 rounded-2xl p-10  text-red-600 mt-4">
           <p> Burası 404 sayfası bi sorun var -_-</p>
-          <button onClick={() => navigate(-1)} className="bg-white rounded-xl p-2 mt-6 text-black ">Döneyim Bari</button>
+          <button onClick={() => navigate('/')} className="bg-white rounded-xl p-2 mt-6 text-black ">Döneyim Bari</button>
         </div>
         <div className="bg-slate-600 rounded-2xl p-10 mt-4">
           <p>

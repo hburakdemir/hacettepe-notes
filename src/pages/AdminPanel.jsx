@@ -82,6 +82,20 @@ const AdminPanel = () => {
     }
   };
 
+const getFileUrl = (fileUrl) => {
+  const apiUrl = import.meta.env.VITE_API_URL.replace('/api', '');
+  
+  if (fileUrl.startsWith('/uploads')) {
+    return `${apiUrl}${fileUrl}`;
+  }
+  
+  if (!fileUrl.startsWith('/')) {
+    fileUrl = '/' + fileUrl;
+  }
+  return `${apiUrl}/uploads${fileUrl}`;
+};
+
+
   const handleApprove = async (postId) => {
     // console.log(" Post onaylanıyor:", postId);
     try {
@@ -337,6 +351,17 @@ const AdminPanel = () => {
                           {post.title}
                         </h3>
                         <p className="text-gray-600 mb-3">{post.content}</p>
+                          {post.file_url && (
+                            <a
+                              href={getFileUrl(post.file_url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
+                            >
+                              <FileText className="h-5 w-5" />
+                              <span>Dosyayı Görüntüle</span>
+                            </a>
+                          )}
                         <div className="flex flex-wrap gap-2">
                           <span className="px-3 py-1 bg-[#2F5755] text-white text-sm rounded-full text-center">
                             {post.faculty}
@@ -428,6 +453,17 @@ const AdminPanel = () => {
                           {post.title}
                         </h3>
                         <p className="text-gray-600 mb-3">{post.content}</p>
+                        {post.file_url && (
+                            <a
+                            href={getFileUrl(post.file_url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
+                            >
+                              <FileText className="h-5 w-5" />
+                              <span>Dosyayı Görüntüle</span>
+                            </a>
+                          )}
                         <div className="flex flex-wrap gap-2">
                           <span className="px-3 py-1 bg-[#2F5755] text-white text-sm rounded-full text-center">
                             {post.faculty}
@@ -501,6 +537,17 @@ const AdminPanel = () => {
                           {post.title}
                         </h3>
                         <p className="text-gray-600 mb-3">{post.content}</p>
+                        {post.file_url && (
+                            <a
+                                href={getFileUrl(post.file_url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
+                            >
+                              <FileText className="h-5 w-5" />
+                              <span>Dosyayı Görüntüle</span>
+                            </a>
+                          )}
                         <div className="flex flex-wrap gap-2">
                           <span className="px-3 py-1 bg-[#2F5755] text-white text-sm rounded-full text-center">
                             {post.faculty}
@@ -657,12 +704,12 @@ const AdminPanel = () => {
                         >
                           {userItem.role || "user"}
                         </span>
-                         <button
-                              onClick={() => handleUserDelete(userItem.id)}
-                              className="text-[#660B05] hover:text-[#8C1007]"
-                            >
-                              <Trash2 className="h-6 w-6" />
-                            </button>
+                        <button
+                          onClick={() => handleUserDelete(userItem.id)}
+                          className="text-[#660B05] hover:text-[#8C1007]"
+                        >
+                          <Trash2 className="h-6 w-6" />
+                        </button>
                       </div>
 
                       {/* bilgiler */}
@@ -686,7 +733,7 @@ const AdminPanel = () => {
                         <span className="text-sm text-gray-600">
                           Rol Değiştir:
                         </span>
-                        
+
                         <select
                           value={userItem.role || "user"}
                           onChange={(e) =>
@@ -695,7 +742,6 @@ const AdminPanel = () => {
                           className="border border-gray-300 rounded px-3 py-1.5 text-sm bg-white"
                           disabled={userItem.id === user?.id}
                         >
-                          
                           <option value="user">User</option>
                           <option value="moderator">Moderator</option>
                           <option value="admin">Admin</option>
