@@ -104,7 +104,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="btn- bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                  className=" bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
                 >
                   Kayıt Ol
                 </Link>
@@ -187,14 +187,14 @@ const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
+                  className="bg-[#003161] hover:bg-[#006A67] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
                 >
                   Giriş Yap
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setIsMenuOpen(false)}
-                  className="btn- bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
+                  className="bg-[#2F5755] hover:bg-[#5A9690] text-white  font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
                 >
                   Kayıt Ol
                 </Link>

@@ -106,9 +106,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Giriş yapılırken bir hata oluştu'
+        error: error.response?.data?.message || 'Giriş yapılırken bir hata oluştu',
+         email: error.response?.data?.email || null 
       };
     }
+    
   };
 
   const register = async (userData) => {

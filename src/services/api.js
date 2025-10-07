@@ -49,6 +49,8 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
+  verifyEmail: (email, code) => api.post('/auth/verify-email', { email, code }),
+  resendCode: (email) => api.post('/auth/resend-code', { email }),
 };
 
 // Posts API
@@ -86,6 +88,8 @@ export const adminAPI = {
   // Kullanıcı rolünü güncelle
   updateUserRole: (userId, role) => api.patch(`/users/${userId}/role`, { role }),
 
+  // Kullanıcı email güncelle
+  updateUserEmail: (userId, emailVerified) => api.patch(`/users/${userId}/email-verification`, {emailVerified}),
 
   // Kullanıcı silme
   deleteUser: (userId,role) => api.delete(`/users/${userId}`),

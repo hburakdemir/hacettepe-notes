@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { authAPI } from "../services/api"; // ✅ Import ekle
 import {
   UserPlus,
   Mail,
@@ -14,7 +14,6 @@ import {
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -26,9 +25,9 @@ const RegisterPage = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const isValidTurkishName = (name) => {
     const allowedChars =
       " abcçdefgğhıijklmnoöprsştuüvyzABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
@@ -81,14 +80,12 @@ const RegisterPage = () => {
       return false;
     }
 
-    // Email validasyonu
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmedData.email)) {
       setError("Geçerli bir email adresi girin");
       return false;
     }
 
-    // Telefon validasyonu (opsiyonel ama doldurulduysa)
     if (trimmedData.phone) {
       const phoneDigits = trimmedData.phone.replace(/\D/g, "");
       if (phoneDigits.length !== 11) {
@@ -97,7 +94,6 @@ const RegisterPage = () => {
       }
     }
 
-    // Şifre validasyonu
     if (trimmedData.password.length < 5) {
       setError("Şifre en az 5 karakter olmalıdır");
       return false;
@@ -129,22 +125,29 @@ const RegisterPage = () => {
 
     setLoading(true);
 
-    const result = await register({
-      fullName: formData.fullName.trim(),
-      username: formData.username.trim(),
-      email: formData.email.trim(),
-      password: formData.password,
-      passwordConfirm: formData.confirmPassword,
-      phone: formData.phone.trim(),
-    });
+    try {
+     
+      const response = await authAPI.register({
+        fullName: formData.fullName.trim(),
+        username: formData.username.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        passwordConfirm: formData.confirmPassword,
+        phone: formData.phone.trim(),
+      });
 
-    if (result.success) {
-      navigate("/login");
-    } else {
-      setError(result.error);
+      if (response.data) {
+       
+        navigate('/verify-email', { 
+          state: { email: formData.email.trim() } 
+        });
+      }
+    } catch (err) {
+      console.error('Kayıt hatası:', err);
+      setError(err.response?.data?.message || 'Kayıt başarısız. Lütfen tekrar deneyin.');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -185,7 +188,7 @@ const RegisterPage = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
-                  placeholder="isim Soyisim"
+                  placeholder="İsim Soyisim"
                 />
               </div>
             </div>

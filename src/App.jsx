@@ -12,6 +12,7 @@ import AddPostPage from "./pages/AddPostPage";
 import NotFound from "./pages/error/NotFound";
 import Help from "./pages/Help";
 import AdminPanel from "./pages/AdminPanel";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/help" element={<Help />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path ="/verify-email" element={<VerifyEmail/>} />
         <Route
           path="/department/:faculty/:department"
           element={<DepartmentDetailPage />}

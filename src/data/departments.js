@@ -16,7 +16,7 @@ const faculties = [
   "Sağlık Bilimleri Fakültesi",
   "Spor Bilimleri Fakültesi",
   "Tıp Fakültesi",
-  "Makine(osb)",
+  "Makine(OSB)",
   "Mimarlık Fakültesi",
   "Mühendislik Fakültesi",
   "Ankara Devlet Konservatuvarı",
@@ -81,7 +81,7 @@ const departments = {
     "İletişim Fakültesi": [
         "İletişim Bilimleri"
     ],
-    "Makine(osb)": [
+    "Makine(OSB)": [
         "Makine"],
     
     "Mühendislik Fakültesi": [

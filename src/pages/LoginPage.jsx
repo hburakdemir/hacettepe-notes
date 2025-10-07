@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, Mail, Lock, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { authAPI } from '../services/api'; // ✅ Import ekle
+import { LogIn, Mail, Lock, AlertCircle, Eye, EyeOff, Send } from 'lucide-react';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,7 +13,12 @@ const LoginPage = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Şifre göster/gizle
+  const [showPassword, setShowPassword] = useState(false);
+  
+  // ✅ YENİ: Email doğrulama durumu
+  const [emailNotVerified, setEmailNotVerified] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,12 +26,14 @@ const LoginPage = () => {
       [e.target.name]: e.target.value,
     });
     setError('');
+    setEmailNotVerified(false); // Yeni input gelince durumu sıfırla
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setEmailNotVerified(false);
 
     const result = await login(formData);
     
@@ -33,9 +41,42 @@ const LoginPage = () => {
       navigate('/');
     } else {
       setError(result.error);
+      
+      // ✅ Email doğrulama kontrolü
+      if (result.error?.includes('email adresinizi doğrulayın')) {
+        setEmailNotVerified(true);
+        // Email bilgisini backend'den almaya çalış (eğer gönderildiyse)
+        if (result.email) {
+          setUserEmail(result.email);
+        }
+      }
     }
     
     setLoading(false);
+  };
+
+  // ✅ YENİ: Kodu tekrar gönder ve verify sayfasına yönlendir
+  const handleResendAndVerify = async () => {
+    if (!userEmail) {
+      setError('Email adresi bulunamadı. Lütfen tekrar giriş yapmayı deneyin.');
+      return;
+    }
+
+    setResendLoading(true);
+    setError('');
+
+    try {
+      await authAPI.resendCode(userEmail);
+      
+      // Başarılı, verify sayfasına yönlendir
+      navigate('/verify-email', { 
+        state: { email: userEmail } 
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Kod gönderilemedi. Lütfen tekrar deneyin.');
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   return (
@@ -51,9 +92,27 @@ const LoginPage = () => {
           </div>
 
           {error && (
-            <div className="mb-4 p-4  border border-red-200 rounded-lg flex items-center space-x-2 text-red-700 text-center">
-              <AlertCircle className="h-5 w-5 flex-shrink-0" />
-              <span className="text-sm">{error}</span>
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-start space-x-2 text-red-700">
+                <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <span className="text-sm">{error}</span>
+                  
+                  {/* ✅ YENİ: Email doğrulama butonu */}
+                  {emailNotVerified && (
+                    <button
+                      onClick={handleResendAndVerify}
+                      disabled={resendLoading}
+                      className="mt-3 w-full flex items-center justify-center space-x-2 bg-[#2F5755] hover:bg-[#5A9690] text-white py-2 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Send className="h-4 w-4" />
+                      <span>
+                        {resendLoading ? 'Gönderiliyor...' : 'Doğrulama Kodu Gönder'}
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -71,7 +130,7 @@ const LoginPage = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg  focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:border-transparent"
                   placeholder="kullanıcı adınız"
                 />
               </div>
@@ -90,7 +149,7 @@ const LoginPage = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg  focus:border-transparent"
+                  className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:border-transparent"
                   placeholder="*******"
                 />
                 <button
@@ -103,11 +162,10 @@ const LoginPage = () => {
               </div>
             </div>
 
-          
             <button
               type="submit"
               disabled={loading}
-              className="w-full  bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200  flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span>Giriş yapılıyor...</span>

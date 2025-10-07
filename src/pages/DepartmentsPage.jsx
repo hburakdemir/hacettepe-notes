@@ -9,6 +9,10 @@ const DepartmentsPage = () => {
 
   const { faculties, departments } = bolumData;
 
+  console.log('Faculties:', faculties);
+  console.log('Departments:', departments);
+  console.log('Tüm bolumData:', bolumData);
+
   const filteredFaculties = faculties.filter((faculty) => {
     const matchesFaculty = faculty.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDepartment = departments[faculty]?.some((dept) =>
@@ -52,7 +56,7 @@ const DepartmentsPage = () => {
             >
               <div className="flex items-center space-x-3">
                 <Library className="h-6 w-6 text-[#5A9690]" />
-                <h2 className="text-lg font-semibold text-gray-900">{faculty}</h2>
+                <h2 className="text-lg text-left font-semibold text-gray-900">{faculty}</h2>
               </div>
               <ChevronRight
                 className={`h-5 w-5 text-[#2F5755] transition-transform ${

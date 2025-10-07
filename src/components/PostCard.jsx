@@ -199,7 +199,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
           href={getFileUrl(post.file_url)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
+          className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
         >
           <FileText className="h-5 w-5" />
           <span>Dosyayı Görüntüle</span>

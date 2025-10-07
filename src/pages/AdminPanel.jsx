@@ -70,6 +70,7 @@ const AdminPanel = () => {
       if (userRole === "admin") {
         try {
           const usersRes = await adminAPI.getAllUsers();
+          console.log('👥 Gelen kullanıcı verisi:', usersRes.data)
           setAllUsers(usersRes.data);
         } catch (err) {
           // console.error("Users hatası:", err);
@@ -82,19 +83,18 @@ const AdminPanel = () => {
     }
   };
 
-const getFileUrl = (fileUrl) => {
-  const apiUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-  
-  if (fileUrl.startsWith('/uploads')) {
-    return `${apiUrl}${fileUrl}`;
-  }
-  
-  if (!fileUrl.startsWith('/')) {
-    fileUrl = '/' + fileUrl;
-  }
-  return `${apiUrl}/uploads${fileUrl}`;
-};
+  const getFileUrl = (fileUrl) => {
+    const apiUrl = import.meta.env.VITE_API_URL.replace("/api", "");
 
+    if (fileUrl.startsWith("/uploads")) {
+      return `${apiUrl}${fileUrl}`;
+    }
+
+    if (!fileUrl.startsWith("/")) {
+      fileUrl = "/" + fileUrl;
+    }
+    return `${apiUrl}/uploads${fileUrl}`;
+  };
 
   const handleApprove = async (postId) => {
     // console.log(" Post onaylanıyor:", postId);
@@ -177,6 +177,24 @@ const getFileUrl = (fileUrl) => {
       alert("kullanıcı silindi");
     } catch (err) {
       alert("kullanıcı silinirken bi şeyler yanlış gitti");
+      console.error(err);
+    }
+  };
+
+  const handleEmailVerificationToggle = async (userId, currentStatus) => {
+    if (
+      !window.confirm(
+        `Bu kullanıcının email onayını ${currentStatus ? "iptal etmek" : "onaylamak"} istediğine emin misiniz?`
+      )
+    ) {
+      return;
+    }
+    try {
+      await adminAPI.updateUserEmail(userId, !currentStatus);
+      alert("Değiştiridn");
+      fetchData();
+    } catch (err) {
+      alert("Başarısız oldu");
       console.error(err);
     }
   };
@@ -351,17 +369,17 @@ const getFileUrl = (fileUrl) => {
                           {post.title}
                         </h3>
                         <p className="text-gray-600 mb-3">{post.content}</p>
-                          {post.file_url && (
-                            <a
-                              href={getFileUrl(post.file_url)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
-                            >
-                              <FileText className="h-5 w-5" />
-                              <span>Dosyayı Görüntüle</span>
-                            </a>
-                          )}
+                        {post.file_url && (
+                          <a
+                            href={getFileUrl(post.file_url)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            <FileText className="h-5 w-5" />
+                            <span>Dosyayı Görüntüle</span>
+                          </a>
+                        )}
                         <div className="flex flex-wrap gap-2">
                           <span className="px-3 py-1 bg-[#2F5755] text-white text-sm rounded-full text-center">
                             {post.faculty}
@@ -454,16 +472,16 @@ const getFileUrl = (fileUrl) => {
                         </h3>
                         <p className="text-gray-600 mb-3">{post.content}</p>
                         {post.file_url && (
-                            <a
+                          <a
                             href={getFileUrl(post.file_url)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
-                            >
-                              <FileText className="h-5 w-5" />
-                              <span>Dosyayı Görüntüle</span>
-                            </a>
-                          )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            <FileText className="h-5 w-5" />
+                            <span>Dosyayı Görüntüle</span>
+                          </a>
+                        )}
                         <div className="flex flex-wrap gap-2">
                           <span className="px-3 py-1 bg-[#2F5755] text-white text-sm rounded-full text-center">
                             {post.faculty}
@@ -538,16 +556,16 @@ const getFileUrl = (fileUrl) => {
                         </h3>
                         <p className="text-gray-600 mb-3">{post.content}</p>
                         {post.file_url && (
-                            <a
-                                href={getFileUrl(post.file_url)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium"
-                            >
-                              <FileText className="h-5 w-5" />
-                              <span>Dosyayı Görüntüle</span>
-                            </a>
-                          )}
+                          <a
+                            href={getFileUrl(post.file_url)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            <FileText className="h-5 w-5" />
+                            <span>Dosyayı Görüntüle</span>
+                          </a>
+                        )}
                         <div className="flex flex-wrap gap-2">
                           <span className="px-3 py-1 bg-[#2F5755] text-white text-sm rounded-full text-center">
                             {post.faculty}
@@ -613,6 +631,9 @@ const getFileUrl = (fileUrl) => {
                           Rol
                         </th>
                         <th className="px-6 py-3 text-left text-sm font-medium text-black uppercase tracking-wider">
+                          Email Doğrulandı
+                        </th>
+                        <th className="px-6 py-3 text-left text-sm font-medium text-black uppercase tracking-wider">
                           İşlemler
                         </th>
                       </tr>
@@ -648,6 +669,25 @@ const getFileUrl = (fileUrl) => {
                             >
                               {userItem.role || "user"}
                             </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm items-center space-x-2">
+                            <button
+                              onClick={() =>
+                                handleEmailVerificationToggle(
+                                  userItem.id,
+                                  userItem.email_verified
+                                )
+                              }
+                              className={`px-3 py-1 text-xs font-semibold rounded-full transition ${
+                                userItem.email_verified
+                                  ? "bg-green-100 text-green-800 hover:bg-green-200"
+                                  : "bg-red-100 text-red-800 hover:bg-red-200"
+                              }`}
+                            >
+                              {userItem.email_verified
+                                ? "Doğrulandı"
+                                : " Doğrulanmadı"}
+                            </button>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-2">
                             <select
