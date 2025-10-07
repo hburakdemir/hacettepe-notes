@@ -4,7 +4,7 @@ import pool from '../db.js';
 export async function getAllUsersModel() {
   try {
     const res = await pool.query(
-      `SELECT id, full_name, username, email, phone, role 
+      `SELECT id, full_name, username, email, phone, role, email_verified
        FROM users 
        ORDER BY id DESC`
     );
@@ -29,6 +29,25 @@ export async function updateUserRoleModel(userId, newRole) {
     throw err;
   }
 }
+
+
+// Kullanıcı email onayını güncelle
+export async function updateUserVerifyEmailModel(userId, emailVerified) {
+  try {
+    const res = await pool.query(
+      `UPDATE users 
+       SET email_verified = $1 
+       WHERE id = $2 
+       RETURNING id, full_name, username, email, email_verified`,
+      [emailVerified, userId]
+    );
+    return res.rows[0];
+  } catch (err) {
+    console.error("❌ updateUserVerifyEmailModel hatası:", err);
+    throw err;
+  }
+}
+
 
 // Kullanıcıyı ID ile getir
 export async function getUserByIdModel(userId) {

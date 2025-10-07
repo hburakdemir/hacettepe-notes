@@ -11,62 +11,58 @@ import {
   isValidEmail,
   isValidPassword
 } from "../utils/validation.js";
+import { sendVerificationEmail } from "../utils/mailService.js";
+
+// 6 haneli rastgele kod oluştur
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 export async function register(req, res) {
   try {
-    const { fullName, username, password, passwordConfirm, email, phone } =
-      req.body;
+    const { fullName, username, password, passwordConfirm, email, phone } = req.body;
 
-    // Boş alan kontrolü
+    // Validasyonlar (aynı)
     if (!fullName || !username || !password || !passwordConfirm || !email) {
-      return res
-        .status(400)
-        .json({ message: "Lütfen zorunlu alanları doldurun." });
+      return res.status(400).json({ message: "Lütfen zorunlu alanları doldurun." });
     }
 
-    // fullName validasyonu
     if (!isValidFullName(fullName)) {
-      return res
-        .status(400)
-        .json({ message: "İsim sadece harflerden oluşmalıdır." });
+      return res.status(400).json({ message: "İsim sadece harflerden oluşmalıdır." });
     }
 
-    // username unique kontrolü
     const userExists = await getUserByUsername(username);
     if (userExists) {
-      return res
-        .status(400)
-        .json({ message: "Bu kullanıcı adı zaten alınmış." });
+      return res.status(400).json({ message: "Bu kullanıcı adı zaten alınmış." });
     }
 
-    // email validasyon + unique kontrol
     if (!isValidEmail(email)) {
       return res.status(400).json({ message: "Geçerli bir email girin." });
     }
+
     const emailExists = await getUserByEmail(email);
     if (emailExists) {
       return res.status(400).json({ message: "Bu email zaten kayıtlı." });
     }
 
-    // phone validasyon (opsiyonel)
     if (phone && !isValidPhone(phone)) {
-      return res
-        .status(400)
-        .json({ message: "Telefon 11 haneli rakamlardan oluşmalıdır." });
+      return res.status(400).json({ message: "Abi telefon 11 haneli rakamlardan oluşmalıdır." });
     }
 
-    if(!isValidPassword(password)){
-      return res.status(400).json({message: "şifre en az 5 karakter 1 büyük harf ve 1 noktalama işareti içermelidir."});
+    if (!isValidPassword(password)) {
+      return res.status(400).json({ message: "rica etsem 5 karakter 1 büyük harf ve 1 noktalama işareti ile tekrar yapar mısın." });
     }
 
-    // password ve passwordConfirm eşitliği
     if (password !== passwordConfirm) {
       return res.status(400).json({ message: "Şifreler eşleşmiyor." });
     }
 
-    // Şifre hashle
+    // Şifre hash
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
+
+    // Doğrulama kodu oluştur
+    const verificationCode = generateVerificationCode();
 
     // Kullanıcı oluştur
     const newUser = await createUser({
@@ -75,11 +71,26 @@ export async function register(req, res) {
       email,
       phone,
       passwordHash,
+      verificationCode
     });
 
-    res
-      .status(201)
-      .json({ message: "Kullanıcı başarıyla oluşturuldu.", user: newUser });
+    // Mail gönder
+    try {
+      await sendVerificationEmail(email, verificationCode);
+    } catch (mailError) {
+      console.error('Mail gönderme hatası:', mailError);
+      // Kullanıcı oluştu ama mail gönderilmedi
+      return res.status(201).json({ 
+        message: "Kullanıcı oluşturuldu ancak doğrulama maili gönderilemedi. Lütfen daha sonra tekrar deneyin.",
+        user: newUser 
+      });
+    }
+
+    res.status(201).json({ 
+      message: "Kullanıcı başarıyla oluşturuldu. Lütfen email adresinizi kontrol edin ve doğrulama kodunu girin.",
+      email: email
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Sunucu hatası." });

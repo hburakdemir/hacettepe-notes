@@ -1,4 +1,4 @@
-import { deleteUserByAdminModel, getAllUsersModel, updateUserRoleModel ,} from '../models/userModel.js';
+import { deleteUserByAdminModel, getAllUsersModel, updateUserRoleModel, updateUserVerifyEmailModel} from '../models/userModel.js';
 
 // Tüm kullanıcıları getir
 export const getAllUsersController = async (req, res) => {
@@ -37,6 +37,33 @@ export const updateUserRoleController = async (req, res) => {
     res.status(500).json({ error: 'Rol güncellenemedi' });
   }
 };
+
+
+export const updateUserEmailVerifyController = async (req, res) => {
+  try {
+    const { emailVerified } = req.body;
+    const userId = req.params.userId;
+
+    if (typeof emailVerified !== "boolean") {
+      return res.status(400).json({ message: "emailVerified boolean olmalı" });
+    }
+
+    const updatedUser = await updateUserVerifyEmailModel(userId, emailVerified);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    }
+
+    res.json({
+      message: "Email doğrulama durumu güncellendi",
+      user: updatedUser,
+    });
+  } catch (err) {
+    console.error("Email doğrulama hatası:", err);
+    res.status(500).json({ error: "Email onaylanamadı (sunucu hatası)" });
+  }
+};
+
 
 
 
