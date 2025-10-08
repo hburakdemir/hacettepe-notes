@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { authAPI } from '../services/api';
-import { LogIn, Lock, AlertCircle, Eye, EyeOff, Send ,User} from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { authAPI } from "../services/api";
+import {
+  LogIn,
+  Lock,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Send,
+  User,
+} from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [emailNotVerified, setEmailNotVerified] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
+  const [userEmail, setUserEmail] = useState("");
   const [resendLoading, setResendLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -24,50 +32,53 @@ const LoginPage = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
-    setEmailNotVerified(false); 
+    setError("");
+    setEmailNotVerified(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
     setEmailNotVerified(false);
 
     const result = await login(formData);
-    
+
     if (result.success) {
-      navigate('/');
+      navigate("/");
     } else {
       setError(result.error);
-      
-      if (result.error?.includes('email adresinizi doğrulayın')) {
+
+      if (result.error?.includes("email adresinizi doğrulayın")) {
         setEmailNotVerified(true);
         if (result.email) {
           setUserEmail(result.email);
         }
       }
     }
-    
+
     setLoading(false);
   };
 
   const handleResendAndVerify = async () => {
     if (!userEmail) {
-      setError('Email adresi bulunamadı. Lütfen tekrar giriş yapmayı deneyin.');
+      setError("Email adresi bulunamadı. Lütfen tekrar giriş yapmayı deneyin.");
       return;
     }
 
     setResendLoading(true);
-    setError('');
+    setError("");
 
     try {
       await authAPI.resendCode(userEmail);
-      navigate('/verify-email', { 
-        state: { email: userEmail } 
+      navigate("/verify-email", {
+        state: { email: userEmail },
       });
     } catch (err) {
-      setError(err.response?.data?.message || 'Kod gönderilemedi. Lütfen tekrar deneyin.');
+      setError(
+        err.response?.data?.message ||
+          "Kod gönderilemedi. Lütfen tekrar deneyin."
+      );
     } finally {
       setResendLoading(false);
     }
@@ -81,8 +92,12 @@ const LoginPage = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2F5755] dark:bg-darktext mb-4">
               <LogIn className="h-8 w-8 text-primary dark:text-secondary" />
             </div>
-            <h2 className="text-3xl font-bold text-secondary dark:text-darktext">Giriş Yap</h2>
-            <p className="text-gray-600 dark:text-darktext mt-2">Hesabınıza giriş yapın</p>
+            <h2 className="text-3xl font-bold text-secondary dark:text-darktext">
+              Giriş Yap
+            </h2>
+            <p className="text-gray-600 dark:text-darktext mt-2">
+              Hesabınıza giriş yapın
+            </p>
           </div>
 
           {error && (
@@ -91,7 +106,7 @@ const LoginPage = () => {
                 <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <span className="text-sm">{error}</span>
-                  
+
                   {emailNotVerified && (
                     <button
                       onClick={handleResendAndVerify}
@@ -100,7 +115,9 @@ const LoginPage = () => {
                     >
                       <Send className="h-4 w-4" />
                       <span>
-                        {resendLoading ? 'Gönderiliyor...' : 'Doğrulama Kodu Gönder'}
+                        {resendLoading
+                          ? "Gönderiliyor..."
+                          : "Doğrulama Kodu Gönder"}
                       </span>
                     </button>
                   )}
@@ -111,7 +128,10 @@ const LoginPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
+              >
                 Kullanıcı Adı
               </label>
               <div className="relative">
@@ -130,7 +150,10 @@ const LoginPage = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
+              >
                 Şifre
               </label>
               <div className="relative">
@@ -150,7 +173,11 @@ const LoginPage = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 >
-                  {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5 text-red-900" />}
+                  {showPassword ? (
+                    <Eye className="h-5 w-5" />
+                  ) : (
+                    <EyeOff className="h-5 w-5 text-red-900" />
+                  )}
                 </button>
               </div>
             </div>
@@ -172,9 +199,20 @@ const LoginPage = () => {
           </form>
 
           <div className="mt-6 text-center">
+            <div className="flex justify-end mt-2 mb-2">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-[#2F5755] hover:text-[#5A9690] dark:text-darkhover hover:dark:text-darktext font-medium"
+              >
+                Şifremi unuttum
+              </Link>
+            </div>
             <p className="text-sm text-gray-600 dark:text-darktext">
-              Hesabınız yok mu?{' '}
-              <Link to="/register" className="text-[#2F5755] hover:text-[#5A9690] dark:text-darkhover hover:dark:text-darktext font-medium">
+              Hesabınız yok mu?{" "}
+              <Link
+                to="/register"
+                className="text-[#2F5755] hover:text-[#5A9690] dark:text-darkhover hover:dark:text-darktext font-medium"
+              >
                 Kayıt Ol
               </Link>
             </p>

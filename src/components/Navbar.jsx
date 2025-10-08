@@ -30,8 +30,6 @@ const Navbar = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  
-
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
@@ -67,29 +65,34 @@ const Navbar = () => {
                   <span>Admin Panel</span>
                 </Link>
               )}
-            <Link
-              to="/"
-              className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
-              <Home className="h-5 w-5" />
-              <span>Ana Sayfa</span>
-            </Link>
-            <Link
-              to="/departments"
-              className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
-              <Library className="h-6 w-6" />
-              <span>Bölümler</span>
-            </Link>
+
             {isAuthenticated && (
               <>
                 <Link
+                  to="/"
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition"
+                >
+                  <Home className="h-5 w-5" />
+                  <span>Ana Sayfa</span>
+                </Link>
+                <Link
+                  to="/departments"
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition"
+                >
+                  <Library className="h-6 w-6" />
+                  <span>Bölümler</span>
+                </Link>
+                <Link
                   to="/help"
-                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition"
+                >
                   <LucideBadgeHelp className="h-5 w-5" />
                   <span>Buraya bi bakar mısın?</span>
                 </Link>
                 <Link
                   to="/add-post"
-                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition"
+                >
                   <PlusCircle className="h-5 w-5" />
                   <span>Not Ekle</span>
                 </Link>
@@ -108,18 +111,20 @@ const Navbar = () => {
                 <LucideLightbulb className="w-5 h-5 text-secondary hover:text-[#2F5755] " />
               )}
             </button>
-            
+
             {isAuthenticated ? (
               <>
                 <Link
                   to="/profile"
-                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition"
+                >
                   <Icon icon="game-icons:deer-head" className="h-8 w-8" />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 text-[#660B05] hover:text-[#e28882] dark:hover:text-[#660B05] dark:text-[#e28882] px-3 py-2 rounded-md transition">
+                  className="flex items-center space-x-1 text-[#660B05] hover:text-[#e28882] dark:hover:text-[#660B05] dark:text-[#e28882] px-3 py-2 rounded-md transition"
+                >
                   <LogOut className="h-5 w-5" />
                   <span>Çıkış</span>
                 </button>
@@ -128,12 +133,14 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="bg-[#003161] hover:bg-[#006A67] text-primary dark:bg-[#DFD0B8] hover:dark:bg-[#331D2C] hover:dark:text-darktext dark:text-secondary font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
+                  className="bg-[#003161] hover:bg-[#006A67] text-primary dark:bg-[#DFD0B8] hover:dark:bg-[#331D2C] hover:dark:text-darktext dark:text-secondary font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                >
                   Giriş Yap
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-[#2F5755] hover:bg-[#5A9690] text-primary dark:bg-[#DFD0B8] dark:text-secondary hover:dark:bg-[#331D2C] hover:dark:text-darktext font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
+                  className="bg-[#2F5755] hover:bg-[#5A9690] text-primary dark:bg-[#DFD0B8] dark:text-secondary hover:dark:bg-[#331D2C] hover:dark:text-darktext font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                >
                   Kayıt Ol
                 </Link>
               </>
@@ -143,7 +150,8 @@ const Navbar = () => {
           {/* Hamburger Menü */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100 dark:text-darktext">
+            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100 dark:text-darktext"
+          >
             {isMenuOpen ? (
               <X className="h-6 w-6" />
             ) : (
@@ -160,58 +168,69 @@ const Navbar = () => {
                 <Link
                   to="/admin"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
                   <ShieldOff className="h-5 w-5 dark:text-darktext" />
                   <span>Admin Panel</span>
                 </Link>
               )}
-            <Link
+            
+
+            {isAuthenticated ? (
+              <>
+              <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+              className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+            >
               <Home className="h-5 w-5 dark:text-darktext" />
               <span>Ana Sayfa</span>
             </Link>
             <Link
               to="/departments"
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+              className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+            >
               <Library className="h-5 w-5 dark:text-darktext" />
               <span>Bölümler</span>
             </Link>
-
-            {isAuthenticated ? (
-              <>
                 <Link
                   to="/help"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
                   <LucideBadgeHelp className="h-5 w-5 dark:text-darktext" />
                   <span>Buraya bi bakar mısın?</span>
                 </Link>
                 <Link
                   to="/add-post"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
                   <PlusCircle className="h-5 w-5 dark:text-darktext" />
                   <span>Not Ekle</span>
                 </Link>
                 <div className="border-t border-gray-300 my-2"></div>
                 <button
                   onClick={toggleTheme}
-                  className="w-full flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  className="w-full flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
                   {theme === "dark" ? (
                     <LucideLightbulbOff className="h-5 w-5 dark:text-darktext" />
                   ) : (
                     <LucideLightbulb className="h-5 w-5 dark:text-darktext" />
                   )}
-                  <span >Karanlık Mod</span>
+                  <span>Karanlık Mod</span>
                 </button>
                 <Link
                   to="/profile"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
-                  <Icon icon="game-icons:deer-head" className="h-5 w-5 dark:text-darktext" />
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
+                  <Icon
+                    icon="game-icons:deer-head"
+                    className="h-5 w-5 dark:text-darktext"
+                  />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
                 <button
@@ -226,7 +245,8 @@ const Navbar = () => {
               <>
                 <button
                   onClick={toggleTheme}
-                  className="w-full flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
+                  className="w-full flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
                   {theme === "dark" ? (
                     <LucideLightbulbOff className="h-5 w-5" />
                   ) : (
@@ -239,7 +259,8 @@ const Navbar = () => {
                   <Link
                     to="/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="bg-[#003161] hover:bg-[#006A67] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center">
+                    className="bg-[#003161] hover:bg-[#006A67] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
+                  >
                     Giriş Yap
                   </Link>
                   <Link

@@ -13,6 +13,9 @@ import NotFound from "./pages/error/NotFound";
 import Help from "./pages/Help";
 import AdminPanel from "./pages/AdminPanel";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 
 function App() {
   return (
@@ -25,6 +28,8 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path ="/verify-email" element={<VerifyEmail/>} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/department/:faculty/:department"
           element={<DepartmentDetailPage />}
