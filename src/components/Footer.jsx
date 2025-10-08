@@ -6,7 +6,7 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-[#2F5755] text-white">
+    <footer className="bg-[#2F5755] text-primary dark:bg-darkbgbutton dark:text-darktext">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 pb-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <img src="/images/logo.png" alt="Logo" className="h-20 " />
@@ -14,7 +14,7 @@ const Footer = () => {
 
         <div className="text-sm md:text-base flex items-center gap-2">
           <span>
-            Designed by:{" "}
+            Designed By:{" "}
             <a
               href="https://www.burakdemir.blog"
               target="_blank"

@@ -50,7 +50,7 @@ const VerifyEmail = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+      <div className="max-w-md w-full bg-primary rounded-lg shadow-md p-8">
         <div className="text-center mb-6">
           <Mail className="h-16 w-16 text-[#2F5755] mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900">Email Doğrulama</h2>
@@ -87,7 +87,7 @@ const VerifyEmail = () => {
           <button
             type="submit"
             disabled={loading || code.length !== 6}
-            className="w-full bg-[#2F5755] text-white py-3 rounded-lg hover:bg-[#5A9690] disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+            className="w-full bg-[#2F5755] text-primary py-3 rounded-lg hover:bg-[#5A9690] disabled:bg-gray-300 disabled:cursor-not-allowed transition"
           >
             {loading ? 'Doğrulanıyor...' : 'Doğrula'}
           </button>

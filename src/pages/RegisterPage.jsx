@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authAPI } from "../services/api"; // ✅ Import ekle
+import { authAPI } from "../services/api"; 
 import {
   UserPlus,
   Mail,
@@ -61,7 +61,6 @@ const RegisterPage = () => {
       email: formData.email.trim(),
       password: formData.password,
       confirmPassword: formData.confirmPassword,
-      phone: formData.phone.trim(),
     };
 
     if (
@@ -151,15 +150,15 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#003161] to-[#F0F0F0]">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#003161] to-[#F0F0F0] dark:from-[#222831] dark:to-[#6d665b]">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-primary dark:bg-darkbgbutton rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2F5755] mb-4">
-              <UserPlus className="h-8 w-8 text-white" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2F5755] dark:bg-darktext mb-4">
+              <UserPlus className="h-8 w-8 text-primary dark:text-secondary" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">Kayıt Ol</h2>
-            <p className="text-gray-600 mt-2">Yeni hesap oluşturun</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-darktext">Kayıt Ol</h2>
+            <p className="text-gray-600 dark:text-darktext mt-2">Yeni hesap oluşturun</p>
           </div>
 
           {error && (
@@ -174,12 +173,12 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor="fullName"
-                className="block text-sm font-medium text-gray-800 mb-2"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
               >
                 İsim Soyisim <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary " />
                 <input
                   id="fullName"
                   name="fullName"
@@ -197,12 +196,12 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-800 mb-2"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
               >
                 Kullanıcı Adı <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <UserPlus className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
+                <UserPlus className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary" />
                 <input
                   id="username"
                   name="username"
@@ -220,12 +219,12 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-800 mb-2"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
               >
                 E-posta <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary" />
                 <input
                   id="email"
                   name="email"
@@ -243,12 +242,12 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-800 mb-2"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
               >
                 Şifre <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary" />
                 <input
                   id="password"
                   name="password"
@@ -267,11 +266,11 @@ const RegisterPage = () => {
                   {showPassword ? (
                     <Eye className="h-5 w-5 text-red-900" />
                   ) : (
-                    <EyeOff className="h-5 w-5 text-black" />
+                    <EyeOff className="h-5 w-5 text-secondary" />
                   )}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-darktext mt-1">
                 En az 5 karakter, 1 büyük harf ve 1 noktalama işareti
               </p>
             </div>
@@ -280,12 +279,12 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-800 mb-2"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
               >
                 Şifre Tekrar <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -304,7 +303,7 @@ const RegisterPage = () => {
                   {showConfirmPassword ? (
                     <Eye className="h-5 w-5 text-red-900" />
                   ) : (
-                    <EyeOff className="h-5 w-5 text-black" />
+                    <EyeOff className="h-5 w-5 text-secondary" />
                   )}
                 </button>
               </div>
@@ -314,12 +313,12 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-medium text-gray-800 mb-2"
+                className="block text-sm font-medium text-gray-800 dark:text-darktext mb-2"
               >
-                Telefon <span className="text-red-500">*</span>
+                Telefon 
               </label>
               <div className="relative">
-                <LucidePhone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
+                <LucidePhone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary" />
                 <input
                   id="phone"
                   name="phone"
@@ -331,7 +330,7 @@ const RegisterPage = () => {
                   maxLength="11"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-darktext mt-1">
                 11 haneli (Örn: 05551234567)
               </p>
             </div>
@@ -339,7 +338,7 @@ const RegisterPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#2F5755] hover:bg-[#5A9690] text-primary dark:bg-[#DFD0B8] dark:text-secondary hover:dark:bg-[#331D2C] hover:dark:text-darktext font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span>Kayıt olunuyor...</span>
@@ -353,11 +352,11 @@ const RegisterPage = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-darktext">
               Zaten hesabınız var mı?{" "}
               <Link
                 to="/login"
-                className="text-[#2F5755] hover:text-[#5A9690] font-medium"
+                className="text-[#2F5755] hover:text-[#5A9690] dark:text-darkhover hover:dark:text-darktext font-medium"
               >
                 Giriş Yap
               </Link>

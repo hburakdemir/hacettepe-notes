@@ -66,13 +66,13 @@ const DepartmentDetailPage = () => {
       </div>
 
       {posts.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
+        <div className="bg-primary rounded-lg shadow-md p-12 text-center">
           <p className="text-gray-600 text-lg mb-4">
             Bu bölüm için henüz not paylaşılmamış.
           </p>
           <Link
             to="/add-post"
-            className="bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-block"
+            className="bg-[#2F5755] hover:bg-[#5A9690] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-block"
           >
             İlk Notu Siz Paylaşın
           </Link>

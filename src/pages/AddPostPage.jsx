@@ -85,9 +85,10 @@ const AddPostPage = () => {
   };
 
   return (
+    <div className="bg-primary dark:bg-darkbg min-h-screen">
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Not Paylaş</h1>
+      <div className="bg-primary dark:bg-darkbgbutton rounded-lg shadow-md p-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-darktext mb-6 ">Not Paylaş</h1>
 
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2 text-red-700">
@@ -105,7 +106,7 @@ const AddPostPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-darktext mb-2">
               Başlık *
             </label>
             <input
@@ -121,7 +122,7 @@ const AddPostPage = () => {
           </div>
 
           <div>
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-darktext mb-2">
               Açıklama *
             </label>
             <textarea
@@ -138,7 +139,7 @@ const AddPostPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="faculty" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="faculty" className="block text-sm font-medium text-gray-700 dark:text-darktext mb-2">
                 Fakülte *
               </label>
               <select
@@ -159,7 +160,7 @@ const AddPostPage = () => {
             </div>
 
             <div>
-              <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="department" className="block text-sm font-medium text-gray-700 dark:text-darktext mb-2">
                 Bölüm *
               </label>
               <select
@@ -183,7 +184,7 @@ const AddPostPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-darktext mb-2">
               Dosya Yükle * (Max: 30MB)
             </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-400 transition">
@@ -192,7 +193,7 @@ const AddPostPage = () => {
                 <div className="flex text-sm text-gray-600">
                   <label
                     htmlFor="file-upload"
-                    className="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none"
+                    className="relative cursor-pointer bg-primary rounded-md font-medium p-1 text-green-600 hover:text-green-500 focus-within:outline-none"
                   >
                     <span>Dosya seçin</span>
                     <input
@@ -204,9 +205,9 @@ const AddPostPage = () => {
                       accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
                     />
                   </label>
-                  <p className="pl-1">veya sürükleyip bırakın</p>
+                  <p className="pl-1 dark:text-darktext">veya sürükleyip bırakın</p>
                 </div>
-                <p className="text-xs text-gray-500">PDF, DOC, PPT, JPG (max. 30MB)</p>
+                <p className="text-xs text-gray-500 dark:text-darktext">PDF, DOC, PPT, JPG (max. 30MB)</p>
                 {file && (
                   <div className="flex items-center justify-center space-x-2 text-sm text-green-600 mt-2">
                     <FileText className="h-5 w-5" />
@@ -228,13 +229,14 @@ const AddPostPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className=" bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className=" bg-[#2F5755] hover:bg-[#5A9690] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Paylaşılıyor...' : 'Paylaş'}
             </button>
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };

@@ -58,15 +58,16 @@ const HomePage = () => {
   }
 
   return (
+    <div className="bg-primary dark:bg-darkbg min-h-screen">
     <div className="max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Tüm Notlar</h1>
-        <p className="text-gray-600">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-darktext mb-4">Tüm Notlar</h1>
+        <p className="text-gray-600 dark:text-darktext">
           Öğrenciler tarafından paylaşılan ders notlarını inceleyin
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-primary dark:bg-darkbgbutton rounded-lg shadow-md p-6 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#5A9690]" />
@@ -95,7 +96,7 @@ const HomePage = () => {
 
       {filteredPosts.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Henüz not paylaşılmamış.</p>
+          <p className="text-gray-500 dark:text-darktext text-lg">Henüz not paylaşılmamış.</p>
         </div>
       ) : (
         <div className="columns-1 md:columns-2 gap-6 space-y-6">
@@ -110,6 +111,7 @@ const HomePage = () => {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 };

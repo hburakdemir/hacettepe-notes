@@ -70,17 +70,17 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
   };
 
   const getFileUrl = (fileUrl) => {
-  const apiUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-  
-  if (fileUrl.startsWith('/uploads')) {
-    return `${apiUrl}${fileUrl}`;
-  }
-  
-  if (!fileUrl.startsWith('/')) {
-    fileUrl = '/' + fileUrl;
-  }
-  return `${apiUrl}/uploads${fileUrl}`;
-};
+    const apiUrl = import.meta.env.VITE_API_URL.replace("/api", "");
+
+    if (fileUrl.startsWith("/uploads")) {
+      return `${apiUrl}${fileUrl}`;
+    }
+
+    if (!fileUrl.startsWith("/")) {
+      fileUrl = "/" + fileUrl;
+    }
+    return `${apiUrl}/uploads${fileUrl}`;
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -128,7 +128,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
   const statusBadge = getStatusBadge(postData.status);
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
+    <div className="bg-primary dark:bg-darkbgbutton rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           {/* Status Badge - Sadece showStatus true ise göster */}
@@ -142,19 +142,21 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
             </div>
           )}
 
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-darktext mb-2">
             {postData.title}
           </h3>
-          <p className="text-gray-800 text-sm mb-3">{postData.content}</p>
+          <p className="text-gray-800 dark:text-darktext text-sm mb-3">
+            {postData.content}
+          </p>
         </div>
 
         {isAuthenticated && postOwner && (
           <button
             onClick={handleDelete}
             disabled={loading}
-            className="ml-4 p-2 hover:bg-gray-100 rounded-full transition"
+            className="ml-4 p-2  rounded-full transition"
           >
-            <Trash2 className="h-6 w-6" />
+            <Trash2 className="h-6 w-6 dark:text-darktext text-secondary" />
           </button>
         )}
 
@@ -162,11 +164,13 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
           <button
             onClick={handleSaveToggle}
             disabled={loading}
-            className="ml-4 p-2 hover:bg-gray-100 rounded-full transition"
+            className="ml-4 p-2  rounded-full transition"
           >
             <Bookmark
               className={`h-6 w-6 ${
-                isSaved ? "text-[#003161] fill-[#003161]" : "text-gray-900"
+                isSaved
+                  ? "text-primary fill-primary dark:text-accent dark:fill-accent"
+                  : "text-gray-900 dark:text-darktext dark:fill-darktext"
               }`}
             />
           </button>
@@ -174,10 +178,10 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#2F5755] text-white">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#2F5755] text-primary">
           {postData.faculty}
         </span>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5A9690] text-white">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5A9690] text-primary">
           {postData.department}
         </span>
       </div>

@@ -24,6 +24,7 @@ function App() {
         <Route path="/help" element={<Help />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path ="/verify-email" element={<VerifyEmail/>} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/department/:faculty/:department"
           element={<DepartmentDetailPage />}
@@ -44,7 +45,6 @@ function App() {
         />
       </Route>
 
-      <Route path="/register" element={<RegisterPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

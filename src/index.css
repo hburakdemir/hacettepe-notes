@@ -14,14 +14,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+html, body, #root {
+  transition: background-color 0.4s  ease, color 0.4s  ease;
+}
+
+
+*,
+*::before,
+*::after {
+  transition-property: background-color, color, border-color, fill, stroke;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in-out;
+}
 @layer components {
- 
   .input-field {
     @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-900 focus:border-transparent outline-none transition-all;
   }
-
 }
 
 .scrollbar-hide::-webkit-scrollbar {

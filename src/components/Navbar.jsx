@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -10,6 +10,8 @@ import {
   PlusCircle,
   LucideBadgeHelp,
   ShieldOff,
+  LucideLightbulb,
+  LucideLightbulbOff,
 } from "lucide-react";
 import { Icon } from "@iconify/react";
 
@@ -17,6 +19,22 @@ const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   const handleLogout = () => {
     logout();
@@ -25,24 +43,25 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-primary dark:bg-darkbgbutton shadow-md sticky top-0 z-50">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="md:ml-40 sm:ml-0 xs:ml-0 flex-shrink-0">
+          <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
               <img
                 src="images/logo.png"
                 alt="Nottepe Logo"
-                className="h-20 w-20 object-contain flex flex-1"
+                className="h-20 w-20 object-contain"
               />
             </Link>
           </div>
-          <div className="hidden md:flex items-center space-x-4">
+
+          <div className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
             {isAuthenticated &&
               (user?.role === "admin" || user?.role === "moderator") && (
                 <Link
                   to="/admin"
-                  className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755] px-3 py-2 rounded-md transition"
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext px-3 py-2 rounded-md transition"
                 >
                   <ShieldOff className="h-5 w-5" />
                   <span>Admin Panel</span>
@@ -50,46 +69,57 @@ const Navbar = () => {
               )}
             <Link
               to="/"
-              className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
-            >
+              className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
               <Home className="h-5 w-5" />
               <span>Ana Sayfa</span>
             </Link>
             <Link
               to="/departments"
-              className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
-            >
+              className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
               <Library className="h-6 w-6" />
               <span>Bölümler</span>
             </Link>
-
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 <Link
                   to="/help"
-                  className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
-                >
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
                   <LucideBadgeHelp className="h-5 w-5" />
                   <span>Buraya bi bakar mısın?</span>
                 </Link>
                 <Link
                   to="/add-post"
-                  className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
-                >
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
                   <PlusCircle className="h-5 w-5" />
                   <span>Not Ekle</span>
                 </Link>
+              </>
+            )}
+          </div>
+
+          <div className="hidden md:flex items-center space-x-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            >
+              {theme === "dark" ? (
+                <LucideLightbulbOff className="w-5 h-5 dark:text-darktext hover:dark:text-darkhover" />
+              ) : (
+                <LucideLightbulb className="w-5 h-5 text-secondary hover:text-[#2F5755] " />
+              )}
+            </button>
+            
+            {isAuthenticated ? (
+              <>
                 <Link
                   to="/profile"
-                  className="flex items-center space-x-1 text-black hover:text-[#2F5755] focus:text-[#2F5755]  px-3 py-2 rounded-md transition"
-                >
+                  className="flex items-center space-x-1 text-secondary hover:text-[#2F5755] focus:text-[#2F5755] dark:text-darktext hover:dark:text-darkhover px-3 py-2 rounded-md transition">
                   <Icon icon="game-icons:deer-head" className="h-8 w-8" />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 text-[#660B05] hover:text-[#e28882] px-3 py-2 rounded-md transition"
-                >
+                  className="flex items-center space-x-1 text-[#660B05] hover:text-[#e28882] dark:hover:text-[#660B05] dark:text-[#e28882] px-3 py-2 rounded-md transition">
                   <LogOut className="h-5 w-5" />
                   <span>Çıkış</span>
                 </button>
@@ -98,25 +128,22 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="bg-[#003161] hover:bg-[#006A67] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                >
+                  className="bg-[#003161] hover:bg-[#006A67] text-primary dark:bg-[#DFD0B8] hover:dark:bg-[#331D2C] hover:dark:text-darktext dark:text-secondary font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
                   Giriş Yap
                 </Link>
                 <Link
                   to="/register"
-                  className=" bg-[#2F5755] hover:bg-[#5A9690] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                >
+                  className="bg-[#2F5755] hover:bg-[#5A9690] text-primary dark:bg-[#DFD0B8] dark:text-secondary hover:dark:bg-[#331D2C] hover:dark:text-darktext font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
                   Kayıt Ol
                 </Link>
               </>
             )}
           </div>
 
-          {/* mobillll hamburger*/}
+          {/* Hamburger Menü */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:[text-[#2F5755]] hover:bg-gray-100"
-          >
+            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100">
             {isMenuOpen ? (
               <X className="h-6 w-6" />
             ) : (
@@ -125,7 +152,7 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* hamburger içi */}
+        {/* Hamburger Menü İçeriği */}
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-2">
             {isAuthenticated &&
@@ -133,8 +160,7 @@ const Navbar = () => {
                 <Link
                   to="/admin"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
-                >
+                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
                   <ShieldOff className="h-5 w-5" />
                   <span>Admin Panel</span>
                 </Link>
@@ -142,16 +168,14 @@ const Navbar = () => {
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
-            >
+              className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
               <Home className="h-5 w-5" />
               <span>Ana Sayfa</span>
             </Link>
             <Link
               to="/departments"
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
-            >
+              className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
               <Library className="h-5 w-5" />
               <span>Bölümler</span>
             </Link>
@@ -159,18 +183,34 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link
+                  to="/help"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
+                  <LucideBadgeHelp className="h-5 w-5" />
+                  <span>Buraya bi bakar mısın?</span>
+                </Link>
+                <Link
                   to="/add-post"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
-                >
+                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
                   <PlusCircle className="h-5 w-5" />
                   <span>Not Ekle</span>
                 </Link>
+                <div className="border-t border-gray-300 my-2"></div>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
+                  {theme === "dark" ? (
+                    <LucideLightbulbOff className="h-5 w-5" />
+                  ) : (
+                    <LucideLightbulb className="h-5 w-5" />
+                  )}
+                  <span>Karanlık Mod</span>
+                </button>
                 <Link
                   to="/profile"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md"
-                >
+                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
                   <Icon icon="game-icons:deer-head" className="h-5 w-5" />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
@@ -183,22 +223,34 @@ const Navbar = () => {
                 </button>
               </>
             ) : (
-              <div className="flex flex-col space-y-2 px-3">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="bg-[#003161] hover:bg-[#006A67] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
-                >
-                  Giriş Yap
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="bg-[#2F5755] hover:bg-[#5A9690] text-white  font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
-                >
-                  Kayıt Ol
-                </Link>
-              </div>
+              <>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
+                  {theme === "dark" ? (
+                    <LucideLightbulbOff className="h-5 w-5" />
+                  ) : (
+                    <LucideLightbulb className="h-5 w-5" />
+                  )}
+                  <span>Karanlık Mod</span>
+                </button>
+                <div className="border-t border-gray-300 my-2"></div>
+                <div className="flex flex-col space-y-2 px-3">
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="bg-[#003161] hover:bg-[#006A67] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center">
+                    Giriş Yap
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="bg-[#2F5755] hover:bg-[#5A9690] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
+                  >
+                    Kayıt Ol
+                  </Link>
+                </div>
+              </>
             )}
           </div>
         )}
