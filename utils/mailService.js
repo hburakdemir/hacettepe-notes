@@ -32,3 +32,26 @@ export async function sendVerificationEmail(email, code) {
     throw error;
   }
 }
+
+
+export async function sendPasswordResetEmail(email, resetCode) {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Şifre Sıfırlama Kodu - Nottepe",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2F5755;">Şifre Sıfırlama</h2>
+        <p>Merhaba,</p>
+        <p>Şifrenizi sıfırlamak için aşağıdaki kodu kullanın:</p>
+        <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; letter-spacing: 5px; font-weight: bold; margin: 20px 0;">
+          ${resetCode}
+        </div>
+        <p style="color: #666;">Bu kod 5 dakika içinde geçerliliğini yitirecektir.</p>
+        <p style="color: #999; font-size: 12px;">Eğer bu isteği siz yapmadıysanız, bu maili görmezden gelebilirsiniz.</p>
+      </div>
+    `
+  };
+
+  return transporter.sendMail(mailOptions);
+}

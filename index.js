@@ -10,6 +10,7 @@ import postRoutes from './routes/postRoutes.js';
 import savedPostRoutes from './routes/savedpostRoutes.js';
 import updateprofileRutes from './routes/updateprofileRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import forgotPasswordRoutes from './routes/forgotPasswordRoutes.js';
 
 
 dotenv.config();
@@ -38,9 +39,10 @@ if (!fs.existsSync('./uploads')) {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
+app.use('/api',userRoutes);
 app.use('/api/auth', loginRoutes);
 app.use('/api/posts', postRoutes);
-app.use('/api',userRoutes);
+app.use('/api/password',forgotPasswordRoutes);
 app.use('/api/auth', registerRoutes);
 app.use('/api/saved-posts', savedPostRoutes);
 app.use('/api/update-profile', updateprofileRutes);
