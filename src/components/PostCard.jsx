@@ -168,9 +168,7 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
           >
             <Bookmark
               className={`h-6 w-6 ${
-                isSaved
-                  ? "text-primary fill-primary dark:text-accent dark:fill-accent"
-                  : "text-gray-900 dark:text-darktext dark:fill-darktext"
+                 isSaved ? "text-[#003161] fill-[#003161] dark:text-darktext dark:fill-darktext"  : "text-gray-900"
               }`}
             />
           </button>

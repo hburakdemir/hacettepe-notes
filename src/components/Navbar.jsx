@@ -143,7 +143,7 @@ const Navbar = () => {
           {/* Hamburger Menü */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100">
+            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100 dark:text-darktext">
             {isMenuOpen ? (
               <X className="h-6 w-6" />
             ) : (
@@ -160,23 +160,23 @@ const Navbar = () => {
                 <Link
                   to="/admin"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
-                  <ShieldOff className="h-5 w-5" />
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  <ShieldOff className="h-5 w-5 dark:text-darktext" />
                   <span>Admin Panel</span>
                 </Link>
               )}
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
-              <Home className="h-5 w-5" />
+              className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+              <Home className="h-5 w-5 dark:text-darktext" />
               <span>Ana Sayfa</span>
             </Link>
             <Link
               to="/departments"
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
-              <Library className="h-5 w-5" />
+              className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+              <Library className="h-5 w-5 dark:text-darktext" />
               <span>Bölümler</span>
             </Link>
 
@@ -185,33 +185,33 @@ const Navbar = () => {
                 <Link
                   to="/help"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
-                  <LucideBadgeHelp className="h-5 w-5" />
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  <LucideBadgeHelp className="h-5 w-5 dark:text-darktext" />
                   <span>Buraya bi bakar mısın?</span>
                 </Link>
                 <Link
                   to="/add-post"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
-                  <PlusCircle className="h-5 w-5" />
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  <PlusCircle className="h-5 w-5 dark:text-darktext" />
                   <span>Not Ekle</span>
                 </Link>
                 <div className="border-t border-gray-300 my-2"></div>
                 <button
                   onClick={toggleTheme}
-                  className="w-full flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
+                  className="w-full flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
                   {theme === "dark" ? (
-                    <LucideLightbulbOff className="h-5 w-5" />
+                    <LucideLightbulbOff className="h-5 w-5 dark:text-darktext" />
                   ) : (
-                    <LucideLightbulb className="h-5 w-5" />
+                    <LucideLightbulb className="h-5 w-5 dark:text-darktext" />
                   )}
-                  <span>Karanlık Mod</span>
+                  <span >Karanlık Mod</span>
                 </button>
                 <Link
                   to="/profile"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">
-                  <Icon icon="game-icons:deer-head" className="h-5 w-5" />
+                  className="flex items-center space-x-2 text-gray-700 dark:text-darktext hover:bg-gray-100 px-3 py-2 rounded-md">
+                  <Icon icon="game-icons:deer-head" className="h-5 w-5 dark:text-darktext" />
                   <span>{user?.username || "Profil"}</span>
                 </Link>
                 <button
