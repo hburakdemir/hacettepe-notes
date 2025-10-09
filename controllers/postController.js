@@ -8,16 +8,18 @@ import {
   rejectPostModel,
   deletePostByIdAdminModel,
   getAllPostsWithStatusModel,
-  getApprovedPostsModel  // EKLENDİ: Bu import eksikti
+  getApprovedPostsModel
 } from '../models/postModel.js';
 
 export const addPostController = async (req, res) => {
   try {
     const { faculty, department, title, content } = req.body;
-    const file = req.file;
+    const files = req.files; 
     const userId = req.user.userId;
 
-    const file_url = file ? file.filename : null;
+    const file_urls = files && files.length > 0 
+      ? files.map(file => file.filename) 
+      : [];
 
     const newPost = await addPostModel({
       user_id: userId,
@@ -25,7 +27,7 @@ export const addPostController = async (req, res) => {
       department,
       title,
       content,
-      file_url,
+      file_urls, 
     });
 
     res.status(200).json({

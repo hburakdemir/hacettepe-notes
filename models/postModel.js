@@ -1,17 +1,15 @@
 import pool from '../db.js';
 
-// Post oluşturma
-export async function addPostModel({ user_id, faculty, department, title, content, file_url }) {
+export async function addPostModel({ user_id, faculty, department, title, content, file_urls }) {
   const res = await pool.query(
-    `INSERT INTO posts (user_id, faculty, department, title, content, file_url, status, created_at)
+    `INSERT INTO posts (user_id, faculty, department, title, content, file_urls, status, created_at)
      VALUES ($1, $2, $3, $4, $5, $6, 'pending', NOW())
      RETURNING *`,
-    [user_id, faculty, department, title, content, file_url]
+    [user_id, faculty, department, title, content, file_urls]
   );
   return res.rows[0];
 }
 
-// Tüm postları kullanıcı bilgisiyle getir
 export async function getAllPostsWithUsersModel() {
   const res = await pool.query(`
     SELECT
@@ -21,7 +19,7 @@ export async function getAllPostsWithUsersModel() {
       posts.created_at,
       posts.faculty,
       posts.department,
-      posts.file_url,
+      posts.file_urls,
       users.id AS user_id,
       users.full_name,
       users.username,
@@ -34,7 +32,6 @@ export async function getAllPostsWithUsersModel() {
   return res.rows;
 }
 
-// Onay bekleyen postları getir
 export async function getPendingPostsModel(){
   const res = await pool.query(`
     SELECT
@@ -44,7 +41,7 @@ export async function getPendingPostsModel(){
       posts.created_at,
       posts.faculty,
       posts.department,
-      posts.file_url,
+      posts.file_urls,
       posts.status,
       users.id AS user_id,
       users.full_name,
@@ -66,7 +63,7 @@ export async function getPostByUserIdModel(userId) {
       posts.created_at,
       posts.faculty,
       posts.department,
-      posts.file_url,
+      posts.file_urls,
       posts.status,
       users.full_name,
       users.username,
@@ -86,7 +83,6 @@ export const deletePostByIdModel = async (postId, userId) => {
     , [postId, userId]);
 };
 
-// Post onayla - GÜNCELLEME: approved_by parametresi eklendi
 export async function approvePostModel(postId, approvedByUserId) {
   const res = await pool.query(
     `UPDATE posts 
@@ -100,7 +96,6 @@ export async function approvePostModel(postId, approvedByUserId) {
   return res.rows[0];
 }
 
-// Post reddet - GÜNCELLEME: rejected_by parametresi eklendi
 export async function rejectPostModel(postId, rejectedByUserId) {
   const res = await pool.query(
     `UPDATE posts 
@@ -114,7 +109,6 @@ export async function rejectPostModel(postId, rejectedByUserId) {
   return res.rows[0];
 }
 
-// Moderatör/Admin için post silme (user_id kontrolü yok)
 export async function deletePostByIdAdminModel(postId) {
   const res = await pool.query(
     `DELETE FROM posts WHERE id = $1 RETURNING *`,
@@ -132,7 +126,7 @@ export async function getPostOwnerModel(postId) {
   return res.rows[0];
 }
 
-// YENİ: Onaylanan postları getir (moderator bilgisi ile)
+// Onaylanan postları getir
 export async function getApprovedPostsModel() {
   const res = await pool.query(`
     SELECT 
@@ -143,7 +137,7 @@ export async function getApprovedPostsModel() {
       posts.approved_at,
       posts.faculty,
       posts.department,
-      posts.file_url,
+      posts.file_urls,
       posts.status,
       users.id AS user_id,
       users.full_name,
@@ -160,7 +154,7 @@ export async function getApprovedPostsModel() {
   return res.rows;
 }
 
-// Tüm postları status ile birlikte getir - GÜNCELLEME: onaylayan/reddeden kişi bilgileri eklendi
+// Tüm postları status ile birlikte getir - GÜNCELLENDİ
 export async function getAllPostsWithStatusModel() {
   const res = await pool.query(`
     SELECT
@@ -170,7 +164,7 @@ export async function getAllPostsWithStatusModel() {
       posts.created_at,
       posts.faculty,
       posts.department,
-      posts.file_url,
+      posts.file_urls,
       posts.status,
       posts.rejected_at,
       posts.approved_at,

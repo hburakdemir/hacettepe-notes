@@ -16,7 +16,6 @@ import { authenticateToken, checkRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Dosya depolama konumu ve isimlendirme
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads');
@@ -30,16 +29,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 }, 
 });
 
-// Mevcut route'lar
-router.post('/addpost', authenticateToken, upload.single('file'), addPostController);
+
+router.post('/addpost', authenticateToken, upload.array('files', 5), addPostController);
+
 router.get('/getpost', getAllPostsController);
 router.get('/my-posts', authenticateToken, getMyPostController);
 router.delete('/deletepost/:postId', authenticateToken, deletePostController);
 
-// Admin/Moderator route'ları
+
 router.get('/pending', authenticateToken, checkRole('moderator', 'admin'), getPendingPostsController);
 router.get('/approved', authenticateToken, checkRole('moderator', 'admin'), getApprovedPostsController);
 router.get('/all-status', authenticateToken, checkRole('moderator', 'admin'), getAllPostsWithStatus);
