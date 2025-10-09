@@ -11,6 +11,7 @@ import savedPostRoutes from './routes/savedpostRoutes.js';
 import updateprofileRutes from './routes/updateprofileRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import forgotPasswordRoutes from './routes/forgotPasswordRoutes.js';
+// import sitemapRoutes from './routes/sitemapRoutes.js';
 
 
 dotenv.config();
@@ -46,6 +47,9 @@ app.use('/api/password',forgotPasswordRoutes);
 app.use('/api/auth', registerRoutes);
 app.use('/api/saved-posts', savedPostRoutes);
 app.use('/api/update', updateprofileRutes);
+
+
+// app.use('/',sitemapRoutes);  // dinamiksitemap xml oluşturma
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
