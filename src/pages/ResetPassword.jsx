@@ -3,8 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Lock, AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { passwordApi } from "../services/api";
 
-import axios from "axios";
-
 const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,22 +32,23 @@ const ResetPassword = () => {
   };
 
   const validatePassword = () => {
-    if (trimmedData.password.length < 5) {
+    // DEĞİŞTİ: trimmedData → formData.newPassword
+    if (formData.newPassword.length < 5) {
       setError("Şifre en az 5 karakter olmalıdır");
       return false;
     }
 
-    if (!/[A-Z]/.test(trimmedData.password)) {
+    if (!/[A-Z]/.test(formData.newPassword)) {
       setError("Şifre en az 1 büyük harf içermelidir");
       return false;
     }
 
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(trimmedData.password)) {
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.newPassword)) {
       setError("Şifre en az 1 noktalama işareti içermelidir (!@#$%^&* vb.)");
       return false;
     }
 
-    if (trimmedData.password !== trimmedData.confirmPassword) {
+    if (formData.newPassword !== formData.confirmPassword) {
       setError("Şifreler eşleşmiyor");
       return false;
     }
@@ -59,39 +58,39 @@ const ResetPassword = () => {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-  if (!email) {
-    setError("Email adresi bulunamadı. Lütfen tekrar deneyin.");
-    return;
-  }
+    
+    if (!email) {
+      setError("Email adresi bulunamadı. Lütfen tekrar deneyin.");
+      return;
+    }
 
-  if (!formData.code || formData.code.length !== 6) {
-    setError("6 haneli kodu girin.");
-    return;
-  }
+    if (!formData.code || formData.code.length !== 6) {
+      setError("6 haneli kodu girin.");
+      return;
+    }
 
-  if (!validatePassword()) return;
+    if (!validatePassword()) return;
 
-  setLoading(true);
-  setError("");
+    setLoading(true);
+    setError("");
 
-  try {
-    await passwordApi.resetPassword(email, formData.code, formData.newPassword);
+    try {
+      await passwordApi.resetPassword(email, formData.code, formData.newPassword);
 
-    // Başarılıysa yönlendir
-    navigate("/login", {
-      state: {
-        message: "Şifreniz başarıyla değiştirildi. Giriş yapabilirsiniz.",
-      },
-    });
-  } catch (err) {
-    setError(
-      err.response?.data?.message || "Kod hatalı veya süresi dolmuş. Lütfen tekrar deneyin."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
-
+      // Başarılıysa yönlendir
+      navigate("/login", {
+        state: {
+          message: "Şifreniz başarıyla değiştirildi. Giriş yapabilirsiniz.",
+        },
+      });
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Kod hatalı veya süresi dolmuş. Lütfen tekrar deneyin."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#003161] to-[#F0F0F0] dark:from-[#222831] dark:to-[#6d665b]">
