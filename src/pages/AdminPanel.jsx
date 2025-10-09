@@ -369,18 +369,26 @@ const AdminPanel = () => {
                           <h3 className="text-xl font-semibold text-gray-900 mb-2 dark:text-darktext">
                             {post.title}
                           </h3>
-                          <p className="text-gray-600 mb-3 dark:text-darktext">{post.content}</p>
-                          {post.file_url && (
-                            <a
-                              href={getFileUrl(post.file_url)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
-                            >
-                              <FileText className="h-5 w-5" />
-                              <span>Dosyayı Görüntüle</span>
-                            </a>
+                          <p className="text-gray-600 mb-3 dark:text-darktext">
+                            {post.content}
+                          </p>
+                          {post.file_urls && post.file_urls.length > 0 && (
+                            <div className="mb-3">
+                              {post.file_urls.map((fileName, index) => (
+                                <a
+                                  key={index}
+                                  href={getFileUrl(fileName)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium mr-3"
+                                >
+                                  <FileText className="h-5 w-5" />
+                                  <span>Dosya {index + 1}</span>
+                                </a>
+                              ))}
+                            </div>
                           )}
+
                           <div className="flex flex-wrap gap-2">
                             <span className="px-3 py-1 bg-[#2F5755] text-primary text-sm rounded-full text-center">
                               {post.faculty}
@@ -471,17 +479,24 @@ const AdminPanel = () => {
                           <h3 className="text-xl font-semibold text-gray-900 mb-2 dark:text-darktext">
                             {post.title}
                           </h3>
-                          <p className="text-gray-600 dark:text-darktext mb-3 ">{post.content}</p>
-                          {post.file_url && (
-                            <a
-                              href={getFileUrl(post.file_url)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
-                            >
-                              <FileText className="h-5 w-5" />
-                              <span>Dosyayı Görüntüle</span>
-                            </a>
+                          <p className="text-gray-600 dark:text-darktext mb-3 ">
+                            {post.content}
+                          </p>
+                          {post.file_urls && post.file_urls.length > 0 && (
+                            <div className="mb-3">
+                              {post.file_urls.map((fileName, index) => (
+                                <a
+                                  key={index}
+                                  href={getFileUrl(fileName)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium mr-3"
+                                >
+                                  <FileText className="h-5 w-5" />
+                                  <span>Dosya {index + 1}</span>
+                                </a>
+                              ))}
+                            </div>
                           )}
                           <div className="flex flex-wrap gap-2">
                             <span className="px-3 py-1 bg-[#2F5755] text-primary text-sm rounded-full text-center">
@@ -556,17 +571,24 @@ const AdminPanel = () => {
                           <h3 className="text-xl font-semibold text-gray-900 mb-2 dark:text-darktext">
                             {post.title}
                           </h3>
-                          <p className="text-gray-600 mb-3 dark:text-darktext">{post.content}</p>
-                          {post.file_url && (
-                            <a
-                              href={getFileUrl(post.file_url)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
-                            >
-                              <FileText className="h-5 w-5" />
-                              <span>Dosyayı Görüntüle</span>
-                            </a>
+                          <p className="text-gray-600 mb-3 dark:text-darktext">
+                            {post.content}
+                          </p>
+                          {post.file_urls && post.file_urls.length > 0 && (
+                            <div className="mb-3">
+                              {post.file_urls.map((fileName, index) => (
+                                <a
+                                  key={index}
+                                  href={getFileUrl(fileName)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium mr-3"
+                                >
+                                  <FileText className="h-5 w-5" />
+                                  <span>Dosya {index + 1}</span>
+                                </a>
+                              ))}
+                            </div>
                           )}
                           <div className="flex flex-wrap gap-2">
                             <span className="px-3 py-1 bg-[#2F5755] text-primary text-sm rounded-full text-center">
@@ -611,7 +633,9 @@ const AdminPanel = () => {
               {allUsers.length === 0 ? (
                 <div className="bg-primary  rounded-lg shadow-md p-12 text-center">
                   <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 dark:text-darktext text-lg">Kullanıcı bulunmuyor.</p>
+                  <p className="text-gray-500 dark:text-darktext text-lg">
+                    Kullanıcı bulunmuyor.
+                  </p>
                 </div>
               ) : (
                 <>
@@ -757,13 +781,17 @@ const AdminPanel = () => {
                         {/* bilgiler */}
                         <div className="space-y-2 mb-3">
                           <div className="flex items-center text-sm">
-                            <span className="text-gray-500 dark:text-[#948979]  w-16">Email:</span>
+                            <span className="text-gray-500 dark:text-[#948979]  w-16">
+                              Email:
+                            </span>
                             <span className="text-secondary dark:text-darktext flex-1 break-all">
                               {userItem.email}
                             </span>
                           </div>
                           <div className="flex items-center text-sm">
-                            <span className="text-gray-500 w-16 dark:text-[#948979]">Telefon:</span>
+                            <span className="text-gray-500 w-16 dark:text-[#948979]">
+                              Telefon:
+                            </span>
                             <span className="text-secondary dark:text-darktext">
                               {userItem.phone || "-"}
                             </span>

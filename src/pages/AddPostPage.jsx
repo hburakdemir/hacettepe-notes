@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postsAPI } from '../services/api';
 import bolumData from '../data/departments';
-import { Upload, FileText, AlertCircle, CheckCircle } from 'lucide-react';
+import { Upload, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
 
 const AddPostPage = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const AddPostPage = () => {
     faculty: '',
     department: '',
   });
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]); // DEĞİŞTİ: file → files (array)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -36,16 +36,29 @@ const AddPostPage = () => {
     setError('');
   };
 
+  // DEĞİŞTİ: Çoklu dosya seçimi
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        setError('Dosya boyutu 40MB\'dan küçük olmalıdır');
-        return;
-      }
-      setFile(selectedFile);
-      setError('');
+    const selectedFiles = Array.from(e.target.files);
+    
+    if (selectedFiles.length > 5) {
+      setError('Maksimum 5 dosya yükleyebilirsiniz');
+      return;
     }
+
+    // Dosya boyutu kontrolü
+    const oversizedFiles = selectedFiles.filter(file => file.size > 10 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      setError('Her dosya 10MB\'dan küçük olmalıdır');
+      return;
+    }
+
+    setFiles(selectedFiles);
+    setError('');
+  };
+
+  // YENİ: Dosya kaldırma
+  const handleRemoveFile = (indexToRemove) => {
+    setFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
   };
 
   const handleSubmit = async (e) => {
@@ -60,15 +73,17 @@ const AddPostPage = () => {
       return;
     }
 
-  
-
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
       formDataToSend.append('content', formData.content);
       formDataToSend.append('faculty', formData.faculty);
       formDataToSend.append('department', formData.department);
-      formDataToSend.append('file', file);
+      
+      // DEĞİŞTİ: Birden fazla dosyayı ekle
+      files.forEach(file => {
+        formDataToSend.append('files', file);
+      });
 
       await postsAPI.addPost(formDataToSend);
       setSuccess(true);
@@ -77,7 +92,6 @@ const AddPostPage = () => {
         navigate('/profile');
       }, 2000);
     } catch (error) {
-      // console.error('Error adding post:', error);
       setError(error.response?.data?.message || 'Not paylaşılırken bir hata oluştu');
     } finally {
       setLoading(false);
@@ -185,7 +199,7 @@ const AddPostPage = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-darktext mb-2">
-              Dosya Yükle * (Max: 30MB)
+              Dosya Yükle (Opsiyonel, Max: 5 dosya, Her biri 10MB)
             </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-400 transition">
               <div className="space-y-1 text-center">
@@ -200,6 +214,7 @@ const AddPostPage = () => {
                       id="file-upload"
                       name="file-upload"
                       type="file"
+                      multiple
                       className="sr-only"
                       onChange={handleFileChange}
                       accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
@@ -207,11 +222,27 @@ const AddPostPage = () => {
                   </label>
                   <p className="pl-1 dark:text-darktext">veya sürükleyip bırakın</p>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-darktext">PDF, DOC, PPT, JPG (max. 30MB)</p>
-                {file && (
-                  <div className="flex items-center justify-center space-x-2 text-sm text-green-600 mt-2">
-                    <FileText className="h-5 w-5" />
-                    <span>{file.name}</span>
+                <p className="text-xs text-gray-500 dark:text-darktext">PDF, DOC, PPT, JPG (max. 10MB her biri)</p>
+                
+                {/* DEĞİŞTİ: Seçilen dosyaları göster */}
+                {files.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    {files.map((file, index) => (
+                      <div key={index} className="flex items-center justify-center space-x-2 text-sm text-green-600">
+                        <FileText className="h-5 w-5" />
+                        <span>{file.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFile(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    <p className="text-xs text-gray-500 dark:text-darktext mt-2">
+                      {files.length} dosya seçildi
+                    </p>
                   </div>
                 )}
               </div>

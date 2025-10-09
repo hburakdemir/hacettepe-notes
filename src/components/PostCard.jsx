@@ -10,12 +10,8 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
   const [loading, setLoading] = useState(false);
   const user = useAuth();
 
-  // console.log("postlar", post);
-
   const postOwner = post.user_id === user.user?._id;
-  // console.log("post sahibi :::", postOwner);
 
-  // Post ID normalize deneme yanılma
   const getPostId = (post) =>
     post._id || post.id || post.postId || post.post_id;
   const postId = String(getPostId(post));
@@ -28,7 +24,6 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     }
 
     if (!postId) {
-      // console.error(" POST ID BULUNAMADI!", post);
       alert("Post ID bulunamadı. Lütfen sayfayı yenileyin.");
       return;
     }
@@ -44,7 +39,6 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
       return;
     }
     if (!postId) {
-      // console.error("post ıd yok ", post);
       alert(
         "post zaten silinmiş, sayfayı yenileyin ya da daha sonra tekrar deneyin"
       );
@@ -60,7 +54,6 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
       if (onDelete) onDelete(postId);
       alert("Gönderi başarıyla silindi");
     } catch (err) {
-      // console.error("frontend silme hatası", err);
       alert(
         "Gönderi silinirken bir hata oluştu, lütfen daha sonra tekrar deneyin"
       );
@@ -69,17 +62,17 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     }
   };
 
-  const getFileUrl = (fileUrl) => {
+  const getFileUrl = (fileName) => {
     const apiUrl = import.meta.env.VITE_API_URL.replace("/api", "");
 
-    if (fileUrl.startsWith("/uploads")) {
-      return `${apiUrl}${fileUrl}`;
+    if (fileName.startsWith("/uploads")) {
+      return `${apiUrl}${fileName}`;
     }
 
-    if (!fileUrl.startsWith("/")) {
-      fileUrl = "/" + fileUrl;
+    if (!fileName.startsWith("/")) {
+      fileName = "/" + fileName;
     }
-    return `${apiUrl}/uploads${fileUrl}`;
+    return `${apiUrl}/uploads${fileName}`;
   };
 
   const formatDate = (dateString) => {
@@ -99,11 +92,10 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     username: post.username,
     full_name: post.full_name,
     createdAt: post.createdAt || post.created_at,
-    fileUrl: post.fileUrl || post.file_url,
+    fileUrls: post.file_urls || [], // DEĞİŞTİ: file_url → file_urls array
     status: post.status || "pending",
   };
 
-  // status badge renkleri
   const getStatusBadge = (status) => {
     const badges = {
       approved: {
@@ -131,7 +123,6 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     <div className="bg-primary dark:bg-darkbgbutton rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          {/* Status Badge - Sadece showStatus true ise göster */}
           {showStatus && (
             <div className="mb-2">
               <span
@@ -196,16 +187,23 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
           </div>
         </div>
       </div>
-      {postData.fileUrl && (
-        <a
-          href={getFileUrl(post.file_url)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
-        >
-          <FileText className="h-5 w-5" />
-          <span>Dosyayı Görüntüle</span>
-        </a>
+
+      {/* DEĞİŞTİ: Çoklu dosya gösterimi */}
+      {postData.fileUrls && postData.fileUrls.length > 0 && (
+        <div className="space-y-2">
+          {postData.fileUrls.map((fileName, index) => (
+            <a
+              key={index}
+              href={getFileUrl(fileName)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 text-[#C5D3E8] hover:text-blue-700 font-medium mr-4"
+            >
+              <FileText className="h-5 w-5" />
+              <span>Dosya {fileName}</span>
+            </a>
+          ))}
+        </div>
       )}
     </div>
   );
