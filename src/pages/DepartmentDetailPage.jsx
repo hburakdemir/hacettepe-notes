@@ -49,30 +49,31 @@ const DepartmentDetailPage = () => {
   }
 
   return (
+        <div className="bg-primary dark:bg-darkbg min-h-screen">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Link
         to="/departments"
-        className="inline-flex items-center space-x-2 text-[#5A9690] hover:text-[#2F5755] mb-6"
+        className="inline-flex items-center space-x-2 text-[#5A9690] hover:text-[#2F5755] dark:text-darktext dark:hover:text-darkhover mb-6"
       >
         <ArrowLeft className="h-5 w-5" />
         <span>Bölümlere Dön</span>
       </Link>
 
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-darktext mb-2">
           {decodeURIComponent(department)}
         </h1>
-        <p className="text-gray-600">{decodeURIComponent(faculty)}</p>
+        <p className="text-gray-600 dark:text-darkhover">{decodeURIComponent(faculty)}</p>
       </div>
 
       {posts.length === 0 ? (
-        <div className="bg-primary rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-600 text-lg mb-4">
+        <div className="bg-primary dark:bg-darkbgbutton rounded-lg shadow-md p-12 text-center">
+          <p className="text-gray-600 dark:text-darktext text-lg mb-4">
             Bu bölüm için henüz not paylaşılmamış.
           </p>
           <Link
             to="/add-post"
-            className="bg-[#2F5755] hover:bg-[#5A9690] text-primary font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-block"
+            className="bg-[#2F5755] hover:bg-[#5A9690] text-primary dark:bg-[#DFD0B8] dark:text-secondary hover:dark:bg-[#331D2C] hover:dark:text-darktext font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-block"
           >
             İlk Notu Siz Paylaşın
           </Link>
@@ -90,6 +91,7 @@ const DepartmentDetailPage = () => {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 };

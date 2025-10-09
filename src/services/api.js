@@ -134,4 +134,8 @@ export const passwordApi = {
 
 };
 
+export const profileupdateAPI = {
+  updateProfile: (data) => api.patch("/update/profile", data),
+};
+
 export default api;

@@ -70,7 +70,7 @@ const AdminPanel = () => {
       if (userRole === "admin") {
         try {
           const usersRes = await adminAPI.getAllUsers();
-          console.log("👥 Gelen kullanıcı verisi:", usersRes.data);
+          // console.log(" Gelen kullanıcı verisi:", usersRes.data);
           setAllUsers(usersRes.data);
         } catch (err) {
           // console.error("Users hatası:", err);

@@ -9,9 +9,9 @@ const DepartmentsPage = () => {
 
   const { faculties, departments } = bolumData;
 
-  console.log("Faculties:", faculties);
-  console.log("Departments:", departments);
-  console.log("Tüm bolumData:", bolumData);
+  // console.log("Faculties:", faculties);
+  // console.log("Departments:", departments);
+  // console.log("Tüm bolumData:", bolumData);
 
   const filteredFaculties = faculties.filter((faculty) => {
     const matchesFaculty = faculty
