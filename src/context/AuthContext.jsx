@@ -20,20 +20,17 @@ export const AuthProvider = ({ children }) => {
 
   // token süresini kontrol et
   const checkTokenExpiry = () => {
-// burayı loglayıp tokeni kontrol edebiliriz
     const tokenTimestamp = localStorage.getItem('tokenTimestamp');
     
     if (tokenTimestamp) {
       const elapsed = Date.now() - parseInt(tokenTimestamp);
       
       if (elapsed >= TOKEN_EXPIRY) {
-       
         logout();
         alert('Oturum süreniz doldu. Lütfen tekrar giriş yapın.');
       }
     }
   };
-
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -55,7 +52,6 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
@@ -67,7 +63,6 @@ export const AuthProvider = ({ children }) => {
       if (elapsed < TOKEN_EXPIRY) {
         setUser(JSON.parse(savedUser));
       } else {
-
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('tokenTimestamp');
@@ -77,12 +72,10 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-
   useEffect(() => {
     if (user) {
-      //  30 saniyede bir kontrol et
+      // 30 saniyede bir kontrol et
       expiryCheckInterval.current = setInterval(checkTokenExpiry, 30000);
-      // console.log('Token expiry check started',checkTokenExpiry);
       
       return () => {
         if (expiryCheckInterval.current) {
@@ -107,10 +100,9 @@ export const AuthProvider = ({ children }) => {
       return {
         success: false,
         error: error.response?.data?.message || 'Giriş yapılırken bir hata oluştu',
-         email: error.response?.data?.email || null 
+        email: error.response?.data?.email || null 
       };
     }
-    
   };
 
   const register = async (userData) => {
@@ -143,11 +135,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (updatedUserData) => {
+    // Mevcut user ile güncellenmiş datayı birleştir
+    const newUser = { ...user, ...updatedUserData };
+    
+    // State'i güncelle
+    setUser(newUser);
+    
+    // localStorage'ı güncelle
+    localStorage.setItem('user', JSON.stringify(newUser));
+    
+    // console.log(' yeni user bilgileri', newUser);
+  };
+
   const value = {
     user,
     login,
     register,
     logout,
+    updateUser, // ✅ YENİ: Export et
     loading,
     isAuthenticated: !!user,
   };
