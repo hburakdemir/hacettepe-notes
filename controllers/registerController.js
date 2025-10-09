@@ -1,4 +1,3 @@
-import pool from "../db.js";
 import bcrypt from "bcryptjs";
 import {
   createUser,
@@ -22,73 +21,82 @@ export async function register(req, res) {
   try {
     const { fullName, username, password, passwordConfirm, email, phone } = req.body;
 
-    // Validasyonlar (aynı)
-    if (!fullName || !username || !password || !passwordConfirm || !email) {
+// boşluk engelleme
+    const trimmedData = {
+      fullName: fullName?.trim(),
+      username: username?.trim(),
+      email: email?.trim().toLowerCase(),
+      phone: phone?.trim(),
+      password: password, // şifreye boşluk eklenebilir
+      passwordConfirm: passwordConfirm // şifreye boşluk eklenebilir
+    };
+
+    // validasyonlar trimlenmiş datayı kullanıyor
+    if (!trimmedData.fullName || !trimmedData.username || !trimmedData.password || !trimmedData.passwordConfirm || !trimmedData.email) {
       return res.status(400).json({ message: "Lütfen zorunlu alanları doldurun." });
     }
 
-    if (!isValidFullName(fullName)) {
+    if (!isValidFullName(trimmedData.fullName)) {
       return res.status(400).json({ message: "İsim sadece harflerden oluşmalıdır." });
     }
 
-    const userExists = await getUserByUsername(username);
+    const userExists = await getUserByUsername(trimmedData.username);
     if (userExists) {
       return res.status(400).json({ message: "Bu kullanıcı adı zaten alınmış." });
     }
 
-    if (!isValidEmail(email)) {
+    if (!isValidEmail(trimmedData.email)) {
       return res.status(400).json({ message: "Geçerli bir email girin." });
     }
 
-    const emailExists = await getUserByEmail(email);
+    const emailExists = await getUserByEmail(trimmedData.email);
     if (emailExists) {
       return res.status(400).json({ message: "Bu email zaten kayıtlı." });
     }
 
-    if (phone && !isValidPhone(phone)) {
+    if (trimmedData.phone && !isValidPhone(trimmedData.phone)) {
       return res.status(400).json({ message: "Abi telefon 11 haneli rakamlardan oluşmalıdır." });
     }
 
-    if (!isValidPassword(password)) {
+    if (!isValidPassword(trimmedData.password)) {
       return res.status(400).json({ message: "rica etsem 5 karakter 1 büyük harf ve 1 noktalama işareti ile tekrar yapar mısın." });
     }
 
-    if (password !== passwordConfirm) {
+    if (trimmedData.password !== trimmedData.passwordConfirm) {
       return res.status(400).json({ message: "Şifreler eşleşmiyor." });
     }
 
     // Şifre hash
     const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    const passwordHash = await bcrypt.hash(trimmedData.password, salt);
 
     // Doğrulama kodu oluştur
     const verificationCode = generateVerificationCode();
 
-    // Kullanıcı oluştur
+    // Kullanıcı oluştur - trimlenmiş datayı kullan
     const newUser = await createUser({
-      full_name: fullName,
-      username,
-      email,
-      phone,
+      full_name: trimmedData.fullName,
+      username: trimmedData.username,
+      email: trimmedData.email,
+      phone: trimmedData.phone || null, // Boş string yerine null
       passwordHash,
       verificationCode
     });
 
     // Mail gönder
     try {
-      await sendVerificationEmail(email, verificationCode);
+      await sendVerificationEmail(trimmedData.email, verificationCode);
     } catch (mailError) {
       console.error('Mail gönderme hatası:', mailError);
-      // Kullanıcı oluştu ama mail gönderilmedi
-      return res.status(201).json({ 
+      return res.status(201).json({
         message: "Kullanıcı oluşturuldu ancak doğrulama maili gönderilemedi. Lütfen daha sonra tekrar deneyin.",
-        user: newUser 
+        user: newUser
       });
     }
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: "Kullanıcı başarıyla oluşturuldu. Lütfen email adresinizi kontrol edin ve doğrulama kodunu girin.",
-      email: email
+      email: trimmedData.email
     });
 
   } catch (error) {

@@ -45,7 +45,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/password',forgotPasswordRoutes);
 app.use('/api/auth', registerRoutes);
 app.use('/api/saved-posts', savedPostRoutes);
-app.use('/api/update-profile', updateprofileRutes);
+app.use('/api/update', updateprofileRutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
