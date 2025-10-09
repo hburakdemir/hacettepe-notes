@@ -15,10 +15,12 @@ import AdminPanel from "./pages/AdminPanel";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import { HelmetProvider } from "react-helmet-async";
 
 
 function App() {
   return (
+    <HelmetProvider>
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
@@ -52,6 +54,7 @@ function App() {
 
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </HelmetProvider>
   );
 }
 
