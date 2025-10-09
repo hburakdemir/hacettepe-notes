@@ -12,11 +12,7 @@ export async function checkUsernameExists(username, excludeUserId) {
   const query = 'SELECT id, username FROM users WHERE LOWER(username) = LOWER($1) AND id != $2';
   const result = await db.query(query, [username, excludeUserId]);
   
-  console.log('🔍 Username kontrol:', {
-    aranan: username,
-    excludeId: excludeUserId,
-    bulunan: result.rows
-  });
+
   
   return result.rows.length > 0;
 }
