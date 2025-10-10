@@ -19,44 +19,71 @@ import ResetPassword from "./pages/ResetPassword";
 import { HelmetProvider } from "react-helmet-async";
 import { Server } from "lucide-react";
 
-
 function App() {
   return (
     <HelmetProvider>
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/departments" element={<DepartmentsPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/admin" element={<AdminPanel />} />
-        <Route path ="/verify-email" element={<VerifyEmail/>} />
+      <Routes>
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/department/:faculty/:department"
-          element={<DepartmentDetailPage />}
-        />
-        <Route
-          path="/profile"element={
-          <ProtectedRoute>
-            <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/add-post"element={
-            <ProtectedRoute>
-              <AddPostPage />
-            </ProtectedRoute>
-          }
-        />
-      </Route>
+        <Route element={<Layout />}>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/departments"
+            element={
+              <ProtectedRoute>
+                <DepartmentsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/help" element={<Help />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
 
-      <Route path="*" element={<NotFound />} />
-      <Route path="/500" element={<ServerError />} />
-    </Routes>
+          <Route
+            path="/department/:faculty/:department"
+            element={
+              <ProtectedRoute>
+                <DepartmentDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-post"
+            element={
+              <ProtectedRoute>
+                <AddPostPage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+        <Route path="/500" element={<ServerError />} />
+      </Routes>
     </HelmetProvider>
   );
 }
