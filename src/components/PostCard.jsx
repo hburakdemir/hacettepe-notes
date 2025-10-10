@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useSavedPosts } from "../context/SavedPostContext";
 import { postsAPI } from "../services/api";
 
-const PostCard = ({ post, onDelete, showStatus = false }) => {
+const PostCard = ({ post, onDelete, showStatus = false, maxLength = 200 }) => {
   const { savedPosts, toggleSavePost } = useSavedPosts();
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -95,6 +95,11 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
     fileUrls: post.file_urls || [], // DEĞİŞTİ: file_url → file_urls array
     status: post.status || "pending",
   };
+  const [showMore, setShowMore] = useState(false);
+  const content = postData.content || "";
+  const isLong = content.length > maxLength;
+  const displayText =
+    showMore || !isLong ? content : content.slice(0, maxLength) + "...";
 
   const getStatusBadge = (status) => {
     const badges = {
@@ -136,9 +141,19 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
           <h3 className="text-xl font-semibold text-gray-900 dark:text-darktext mb-2">
             {postData.title}
           </h3>
-          <p className="text-gray-800 dark:text-darktext text-sm mb-3">
-            {postData.content}
+          <p className="text-gray-800 dark:text-darktext text-sm mb-3  ">
+            {displayText}
           </p>
+          <div className="justify-end flex">
+          {isLong && (
+            <button
+              onClick={() => setShowMore(!showMore)}
+              className="text-blue-900 dark:text-primary hover:underline text-sm mt-1 justify-center items-center text-center"
+            >
+              {showMore ? "Daha az göster" : "Devamını oku"}
+            </button>
+          )}
+          </div>
         </div>
 
         {isAuthenticated && postOwner && (
@@ -159,7 +174,9 @@ const PostCard = ({ post, onDelete, showStatus = false }) => {
           >
             <Bookmark
               className={`h-6 w-6 ${
-                 isSaved ? "text-[#003161] fill-[#003161] dark:text-darktext dark:fill-darktext"  : "text-gray-900 dark:text-darktext"
+                isSaved
+                  ? "text-[#003161] fill-[#003161] dark:text-darktext dark:fill-darktext"
+                  : "text-gray-900 dark:text-darktext"
               }`}
             />
           </button>

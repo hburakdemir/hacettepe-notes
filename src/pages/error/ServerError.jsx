@@ -1,17 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const NotFound = () => {
+const ServerError = () => {
   const navigate = useNavigate();
 
   return (
     <div
       className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center p-6"
-      style={{ backgroundImage: "url('/images/404.jpg')" }}
+      style={{ backgroundImage: "url('/images/500.jpg')" }}
     >
-      <h1 className="text-6xl font-bold text-white drop-shadow-lg mb-4">404 Not Found</h1>
+      <h1 className="text-6xl font-bold text-white drop-shadow-lg mb-4">500 Internal Server Error</h1>
       <p className="text-white text-lg mb-6 text-center drop-shadow-md">
-        Niye burdasın bilmiyorum ama geri dönmelisin.
+        Şu an bir hata oluştu ya da bakım yapılıyor. Endişelenme, hemen ilgileniyorum.
       </p>
       <button
         onClick={() => navigate("/")}
@@ -23,4 +23,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default ServerError;

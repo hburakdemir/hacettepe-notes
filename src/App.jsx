@@ -10,12 +10,14 @@ import DepartmentDetailPage from "./pages/DepartmentDetailPage";
 import ProfilePage from "./pages/ProfilePage";
 import AddPostPage from "./pages/AddPostPage";
 import NotFound from "./pages/error/NotFound";
+import ServerError from "./pages/error/ServerError";
 import Help from "./pages/Help";
 import AdminPanel from "./pages/AdminPanel";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { HelmetProvider } from "react-helmet-async";
+import { Server } from "lucide-react";
 
 
 function App() {
@@ -53,6 +55,7 @@ function App() {
       </Route>
 
       <Route path="*" element={<NotFound />} />
+      <Route path="/500" element={<ServerError />} />
     </Routes>
     </HelmetProvider>
   );

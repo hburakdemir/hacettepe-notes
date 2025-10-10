@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { adminAPI } from "../services/api";
+import { adminAPI,postsAPI } from "../services/api";
 import {
   Users,
   FileText,
@@ -11,6 +11,7 @@ import {
   Loader,
   Shield,
 } from "lucide-react";
+import { useSavedPosts } from "../context/SavedPostContext";
 
 const AdminPanel = () => {
   const { user } = useAuth();
@@ -20,6 +21,7 @@ const AdminPanel = () => {
   const [approvedPosts, setApprovedPosts] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalPosts,setTotalPosts] = useState(0);
 
   const isAdmin = user?.role === "admin";
   const isModerator = user?.role === "moderator" || user?.role === "admin";
@@ -27,8 +29,19 @@ const AdminPanel = () => {
   useEffect(() => {
     if (user?.role) {
       fetchData();
+      fetchTotalPosts();
     }
   }, [user]);
+
+const fetchTotalPosts = async() => {
+  try{
+    const res = await postsAPI.getAllPosts();
+    // console.log("tüm postlar burda -->",res.data);
+    setTotalPosts(res.data.length);
+  }catch(err){
+    console.error("tüm postların sayısını alamıyoruz");
+  }
+};
 
   const fetchData = async () => {
     // console.log("fetchData başladı...");
@@ -246,6 +259,7 @@ const AdminPanel = () => {
           <p className="text-gray-600 dark:text-darktext">
             Hoşgeldiniz, {user?.username} ({user?.role})
           </p>
+           <p>Nottepedeki Toplam Not: {totalPosts}</p>
         </div>
 
         {/* Tabs */}

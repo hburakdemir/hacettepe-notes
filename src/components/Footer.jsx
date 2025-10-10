@@ -14,7 +14,7 @@ const Footer = () => {
 
         <div className="text-sm md:text-base flex items-center gap-2">
           <span>
-            Designed By:{" "}
+            Writed By:{" "}
             <a
               href="https://www.burakdemir.blog"
               target="_blank"
@@ -26,7 +26,6 @@ const Footer = () => {
           </span>
           <Globe />
         </div>
-
         <div className="flex items-center gap-6">
           <a
             href="https://github.com/hburakdemir"
