@@ -26,14 +26,47 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + uniqueSuffix + '.' + extension);
   }
 });
+const allowedExtensions = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'jpg', 'jpeg', 'png'];
+
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, 
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+  fileFilter: (req, file, cb) => {
+    const extension = file.originalname.split('.').pop().toLowerCase();
+    if (allowedExtensions.includes(extension)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Geçersiz dosya türü. Yalnızca PDF, Word, PowerPoint ve resim dosyalarına izin verilmektedir.'));
+    }
+  },
 });
 
+// aşağı ekledik
+// router.use((err, req, res, next) => {
+//   if (err instanceof multer.MulterError) {
+//     return res.status(400).json({ message: 'Dosya çok büyük, maksimum 10MB olabilir.' });
+//   } else if (err) {
+//     return res.status(400).json({ message: err.message });
+//   }
+//   next();
+// });
 
-router.post('/addpost', authenticateToken, upload.array('files', 5), addPostController);
+
+
+
+// dosya tür kontrolü
+router.post('/addpost',authenticateToken,(req, res, next) => {
+  upload.array('files', 5)(req, res, function(err) {
+      if (err) {
+        return res.status(400).json({ message: err.message });
+      }
+      next(); 
+    });
+  },
+  addPostController
+);
+
 
 router.get('/getpost', getAllPostsController);
 router.get('/my-posts', authenticateToken, getMyPostController);

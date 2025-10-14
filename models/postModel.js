@@ -11,6 +11,7 @@ export async function addPostModel({ user_id, faculty, department, title, conten
 }
 
 export async function getAllPostsWithUsersModel() {
+  //  istekte gözükmemesi gereken bilgi full name ama admin get post içn ayrı api yazınca sil
   const res = await pool.query(`
     SELECT
       posts.id AS post_id,
