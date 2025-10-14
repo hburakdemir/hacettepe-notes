@@ -92,7 +92,8 @@ const AddPostPage = () => {
         navigate('/profile');
       }, 2000);
     } catch (error) {
-      setError(error.response?.data?.message || 'Not paylaşılırken bir hata oluştu');
+      const message = error.response?.data?.message;
+  setError(message || 'Not paylaşılırken bir hata oluştu');
     } finally {
       setLoading(false);
     }
