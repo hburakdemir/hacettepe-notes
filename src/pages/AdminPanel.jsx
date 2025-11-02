@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { adminAPI,postsAPI } from "../services/api";
+import { adminAPI, postsAPI } from "../services/api";
 import {
   Users,
   FileText,
@@ -11,7 +11,6 @@ import {
   Loader,
   Shield,
 } from "lucide-react";
-import { useSavedPosts } from "../context/SavedPostContext";
 
 const AdminPanel = () => {
   const { user } = useAuth();
@@ -21,7 +20,9 @@ const AdminPanel = () => {
   const [approvedPosts, setApprovedPosts] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [totalPosts,setTotalPosts] = useState(0);
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [visibleCount, setVisibleCount] = useState(1);
 
   const isAdmin = user?.role === "admin";
   const isModerator = user?.role === "moderator" || user?.role === "admin";
@@ -33,15 +34,24 @@ const AdminPanel = () => {
     }
   }, [user]);
 
-const fetchTotalPosts = async() => {
-  try{
-    const res = await postsAPI.getAllPosts();
-    // console.log("tüm postlar burda -->",res.data);
-    setTotalPosts(res.data.length);
-  }catch(err){
-    console.error("tüm postların sayısını alamıyoruz");
-  }
-};
+  const filteredUsers = allUsers
+    .filter((user) =>
+      [user.full_name, user.username, user.email, user.phone]
+        .join("")
+        .toLowerCase()
+        .includes(searchTerm?.toLowerCase())
+    )
+    .slice(0, searchTerm ? allUsers.length : visibleCount);
+
+  const fetchTotalPosts = async () => {
+    try {
+      const res = await postsAPI.getAllPosts();
+      // console.log("tüm postlar burda -->",res.data);
+      setTotalPosts(res.data.length);
+    } catch (err) {
+      console.error("tüm postların sayısını alamıyoruz");
+    }
+  };
 
   const fetchData = async () => {
     // console.log("fetchData başladı...");
@@ -197,7 +207,9 @@ const fetchTotalPosts = async() => {
   const handleEmailVerificationToggle = async (userId, currentStatus) => {
     if (
       !window.confirm(
-        `Bu kullanıcının email onayını ${currentStatus ? "iptal etmek" : "onaylamak"} istediğine emin misiniz?`
+        `Bu kullanıcının email onayını ${
+          currentStatus ? "iptal etmek" : "onaylamak"
+        } istediğine emin misiniz?`
       )
     ) {
       return;
@@ -259,7 +271,7 @@ const fetchTotalPosts = async() => {
           <p className="text-gray-600 dark:text-darktext">
             Hoşgeldiniz, {user?.username} ({user?.role})
           </p>
-           <p>Nottepedeki Toplam Not: {totalPosts}</p>
+          <p>Nottepedeki Toplam Not: {totalPosts}</p>
         </div>
 
         {/* Tabs */}
@@ -641,6 +653,41 @@ const fetchTotalPosts = async() => {
             </div>
           )}
 
+         <div className="mb-4">
+  {/*başlık ve daha fazla göster divi */}
+  <div className="flex items-center justify-start mb-2 gap-4">
+    <h2 className="text-lg font-semibold text-secondary dark:text-darktext">
+      Kullanıcılar
+    </h2>
+    {!searchTerm && visibleCount < allUsers.length && (
+      <button
+        onClick={() => setVisibleCount((prev) => prev + 100)}
+      className="px-4 py-2 bg-darktext text-secondary  rounded-lg  transition"
+      >
+        Daha Fazla Göster
+      </button>
+    )}
+  </div>
+
+  {/*ara ve tümünü göster divi */}
+  <div className="flex items-center justify-between gap-4">
+    <input
+      type="text"
+      value={searchTerm}
+      placeholder="kullanıcı ara.."
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none flex-1"
+    />
+    <button
+      onClick={() => setVisibleCount(allUsers.length)}
+      className="px-4 py-2  dark:text-darktext text-[#5A9690] rounded-lg  transition"
+    >
+      Tümünü Göster
+    </button>
+  </div>
+</div>
+
+        
           {/* Kullanıcılar f (Sadece Admin) */}
           {activeTab === "users" && isAdmin && (
             <div>
@@ -679,7 +726,7 @@ const fetchTotalPosts = async() => {
                         </tr>
                       </thead>
                       <tbody className="bg-primary dark:bg-darkbgbutton divide-y divide-gray-200">
-                        {allUsers.map((userItem) => (
+                        {filteredUsers.map((userItem) => (
                           <tr key={userItem.id}>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div>
@@ -703,8 +750,8 @@ const fetchTotalPosts = async() => {
                                   userItem.role === "admin"
                                     ? "bg-[#FAB12F] text-[#134686]"
                                     : userItem.role === "moderator"
-                                      ? "bg-[#004030] text-[#FFF9E5]"
-                                      : "bg-black text-[#FFE8DB]"
+                                    ? "bg-[#004030] text-[#FFF9E5]"
+                                    : "bg-black text-[#FFE8DB]"
                                 }`}
                               >
                                 {userItem.role || "user"}
@@ -778,8 +825,8 @@ const fetchTotalPosts = async() => {
                               userItem.role === "admin"
                                 ? "bg-[#FAB12F] text-[#134686]"
                                 : userItem.role === "moderator"
-                                  ? "bg-[#004030] text-[#FFF9E5]"
-                                  : "bg-black text-[#FFE8DB]"
+                                ? "bg-[#004030] text-[#FFF9E5]"
+                                : "bg-black text-[#FFE8DB]"
                             }`}
                           >
                             {userItem.role || "user"}
