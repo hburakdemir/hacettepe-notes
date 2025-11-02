@@ -22,7 +22,7 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [totalPosts, setTotalPosts] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const [visibleCount, setVisibleCount] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(50);
 
   const isAdmin = user?.role === "admin";
   const isModerator = user?.role === "moderator" || user?.role === "admin";
@@ -653,39 +653,41 @@ const AdminPanel = () => {
             </div>
           )}
 
-         <div className="mb-4">
-  {/*başlık ve daha fazla göster divi */}
-  <div className="flex items-center justify-start mb-2 gap-4">
-    <h2 className="text-lg font-semibold text-secondary dark:text-darktext">
-      Kullanıcılar
-    </h2>
-    {!searchTerm && visibleCount < allUsers.length && (
-      <button
-        onClick={() => setVisibleCount((prev) => prev + 100)}
-      className="px-4 py-2 bg-darktext text-secondary  rounded-lg  transition"
-      >
-        Daha Fazla Göster
-      </button>
-    )}
-  </div>
+        {activeTab === "users" && isAdmin && (
+  <div className="mb-4">
+    {/* Başlık ve 'Daha Fazla Göster' */}
+    <div className="flex items-center justify-start mb-2 gap-4">
+      <h2 className="text-lg font-semibold text-secondary dark:text-darktext">
+        Kullanıcılar
+      </h2>
+      {!searchTerm && visibleCount < allUsers.length && (
+        <button
+          onClick={() => setVisibleCount((prev) => prev + 100)}
+          className="px-4 py-2 bg-darktext text-secondary rounded-lg transition"
+        >
+          Daha Fazla Göster
+        </button>
+      )}
+    </div>
 
-  {/*ara ve tümünü göster divi */}
-  <div className="flex items-center justify-between gap-4">
-    <input
-      type="text"
-      value={searchTerm}
-      placeholder="kullanıcı ara.."
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none flex-1"
-    />
-    <button
-      onClick={() => setVisibleCount(allUsers.length)}
-      className="px-4 py-2  dark:text-darktext text-[#5A9690] rounded-lg  transition"
-    >
-      Tümünü Göster
-    </button>
+    {/* Arama ve 'Tümünü Göster' */}
+    <div className="flex items-center justify-between gap-4">
+      <input
+        type="text"
+        value={searchTerm}
+        placeholder="kullanıcı ara.."
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none flex-1"
+      />
+      <button
+        onClick={() => setVisibleCount(allUsers.length)}
+        className="px-4 py-2 dark:text-darktext text-[#5A9690] rounded-lg transition"
+      >
+        Tümünü Göster
+      </button>
+    </div>
   </div>
-</div>
+)}
 
         
           {/* Kullanıcılar f (Sadece Admin) */}
