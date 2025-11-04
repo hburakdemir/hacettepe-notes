@@ -54,7 +54,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+          <div className="hidden lg:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
             {isAuthenticated &&
               (user?.role === "admin" || user?.role === "moderator") && (
                 <Link
@@ -100,7 +100,7 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
@@ -150,7 +150,7 @@ const Navbar = () => {
           {/* Hamburger Menü */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100 dark:text-darktext"
+            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-[#2F5755] hover:bg-gray-100 dark:text-darktext"
           >
             {isMenuOpen ? (
               <X className="h-6 w-6" />
@@ -162,7 +162,7 @@ const Navbar = () => {
 
         {/* Hamburger Menü İçeriği */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-2">
+          <div className="lg:hidden py-4 space-y-2">
             {isAuthenticated &&
               (user?.role === "admin" || user?.role === "moderator") && (
                 <Link
