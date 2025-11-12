@@ -1,10 +1,17 @@
-import { deleteUserByAdminModel, getAllUsersModel, updateUserRoleModel, updateUserVerifyEmailModel} from '../models/userModel.js';
+import { deleteUserByAdminModel, getAllUsersModel, searchUsersModel, updateUserRoleModel, updateUserVerifyEmailModel} from '../models/userModel.js';
 
 // Tüm kullanıcıları getir
 export const getAllUsersController = async (req, res) => {
   try {
-    const users = await getAllUsersModel();
-    res.json(users);
+    const limit = parseInt(req.query.limit) || 50;  
+    const offset = parseInt(req.query.offset) || 0;  
+    const q = req.query.q || null;
+
+    const { users, total } = q ?
+    await searchUsersModel(q,limit,offset):
+    await getAllUsersModel(limit, offset) ;
+
+    res.json({ users, total });
   } catch (err) {
     console.error('Kullanıcılar alınamadı:', err);
     res.status(500).json({ error: 'Kullanıcılar alınamadı' });
@@ -83,3 +90,5 @@ export const deleteUserByAdminController = async(req,res) => {
     res.status(500).json({error:'kullanıcı silinemedi sunucu hatası'})
   }
 }
+
+
