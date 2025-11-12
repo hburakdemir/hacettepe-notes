@@ -158,7 +158,8 @@ const RegisterPage = () => {
               <UserPlus className="h-8 w-8 text-primary dark:text-secondary" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-darktext">Kayıt Ol</h2>
-            <p className="text-gray-600 dark:text-darktext mt-2">Yeni hesap oluşturun</p>
+            <p className="text-gray-600 dark:text-darktext mt-2 text-lg">Yeni hesap oluşturun</p>
+            <p className="text-gray-600 dark:text-darktext mt-2 text-sm">Hacettepe mail adresi zorunlu değildir. İstediğiniz mail adresi ile kayıt olabilirsiniz.</p>
           </div>
 
           {error && (

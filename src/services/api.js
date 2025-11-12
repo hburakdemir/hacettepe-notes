@@ -91,8 +91,9 @@ export const profileAPI = {
 
 // ADMIN API - DÜZELTİLDİ: api instance kullanılıyor
 export const adminAPI = {
-  // Tüm kullanıcıları getir
-  getAllUsers: () => api.get("/users"),
+  // Tüm kullanıcıları getir pagination ve arama
+getAllUsers: ({ limit = 50, offset = 0, q = '' }) =>
+  api.get(`/users?limit=${limit}&offset=${offset}&q=${encodeURIComponent(q)}`),
 
   // Kullanıcı rolünü güncelle
   updateUserRole: (userId, role) =>

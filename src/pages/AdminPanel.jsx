@@ -22,7 +22,8 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [totalPosts, setTotalPosts] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const [visibleCount, setVisibleCount] = useState(50);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [loadedUsersCount, setLoadedUsersCount] = useState(0);
 
   const isAdmin = user?.role === "admin";
   const isModerator = user?.role === "moderator" || user?.role === "admin";
@@ -34,19 +35,11 @@ const AdminPanel = () => {
     }
   }, [user]);
 
-  const filteredUsers = allUsers
-    .filter((user) =>
-      [user.full_name, user.username, user.email, user.phone]
-        .join("")
-        .toLowerCase()
-        .includes(searchTerm?.toLowerCase())
-    )
-    .slice(0, searchTerm ? allUsers.length : visibleCount);
+  const usersToDisplay = allUsers;
 
   const fetchTotalPosts = async () => {
     try {
       const res = await postsAPI.getAllPosts();
-      // console.log("tüm postlar burda -->",res.data);
       setTotalPosts(res.data.length);
     } catch (err) {
       console.error("tüm postların sayısını alamıyoruz");
@@ -54,53 +47,57 @@ const AdminPanel = () => {
   };
 
   const fetchData = async () => {
-    // console.log("fetchData başladı...");
     setLoading(true);
     try {
       const userRole = user?.role;
 
       if (userRole === "moderator" || userRole === "admin") {
-        // Pending posts
         try {
           const pendingRes = await adminAPI.getPendingPosts();
           setPendingPosts(pendingRes.data);
-        } catch (err) {
-          // console.error("Pending posts hatası:", err);
-        }
+        } catch (err) {}
 
-        // Approved posts
         try {
           const approvedRes = await adminAPI.getApprovedPosts();
-          // console.log(" APPROVED POSTS  DATA:", approvedRes.data);
           setApprovedPosts(approvedRes.data);
-        } catch (err) {
-          // console.error(" Approved posts hatası:", err);
-          // console.error("Approved posts hatası:", err);
-        }
+        } catch (err) {}
 
-        // All posts with status (rejected için)
         try {
           const allPostsRes = await adminAPI.getAllPostsWithStatus();
           const rejected = allPostsRes.data.filter(
             (post) => post.status === "rejected"
           );
           setRejectedPosts(rejected);
-        } catch (err) {
-          // console.error("All posts hatası:", err);
-        }
+        } catch (err) {}
       }
 
+      // Admin için sadece x kullanıcı çek
       if (userRole === "admin") {
-        try {
-          const usersRes = await adminAPI.getAllUsers();
-          // console.log(" Gelen kullanıcı verisi:", usersRes.data);
-          setAllUsers(usersRes.data);
-        } catch (err) {
-          // console.error("Users hatası:", err);
-        }
+        await fetchUsers(50, 0, true);
       }
     } catch (err) {
-      // console.error("Genel veri çekme hatası:", err);
+      console.error("Genel veri çekme hatası:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUsers = async (limit, offset, reset = false) => {
+    setLoading(true);
+    try {
+      const res = await adminAPI.getAllUsers({ limit, offset, q: searchTerm });
+
+      if (reset) {
+        setAllUsers(res.data.users);
+        setLoadedUsersCount(res.data.users.length);
+      } else {
+        setAllUsers((prev) => [...prev, ...res.data.users]);
+        setLoadedUsersCount((prev) => prev + res.data.users.length);
+      }
+
+      setTotalUsers(res.data.total);
+    } catch (err) {
+      console.error("Users hatası:", err);
     } finally {
       setLoading(false);
     }
@@ -120,29 +117,21 @@ const AdminPanel = () => {
   };
 
   const handleApprove = async (postId) => {
-    // console.log(" Post onaylanıyor:", postId);
     try {
       const response = await adminAPI.approvePost(postId);
-      // console.log(" Approve response:", response);
       alert("Post onaylandı!");
       fetchData();
     } catch (err) {
-      // console.error(" Onaylama hatası:", err);
-      // console.error(" Error response:", err.response);
       alert("Post onaylanırken hata oluştu");
     }
   };
 
   const handleReject = async (postId) => {
-    // console.log(" Post reddediliyor:", postId);
     try {
       const response = await adminAPI.rejectPost(postId);
-      // console.log(" Reject response:", response);
       alert("Post reddedildi!");
       fetchData();
     } catch (err) {
-      // console.error(" Reddetme hatası:", err);
-      // console.error("Error response:", err.response);
       alert("Post reddedilirken hata oluştu");
     }
   };
@@ -155,15 +144,11 @@ const AdminPanel = () => {
     ) {
       return;
     }
-    // console.log(" Post siliniyor:", postId);
     try {
       const response = await adminAPI.deletePostAdmin(postId);
-      // console.log(" Delete response:", response);
       alert("Post silindi!");
       fetchData();
     } catch (err) {
-      // console.error(" Silme hatası:", err);
-      // console.error(" Error response:", err.response);
       alert("Post silinirken hata oluştu");
     }
   };
@@ -176,15 +161,11 @@ const AdminPanel = () => {
     ) {
       return;
     }
-    // console.log(" Rol değiştiriliyor:", userId, "=>", newRole);
     try {
       const response = await adminAPI.updateUserRole(userId, newRole);
-      // console.log(" Role update response:", response);
       alert("Kullanıcı rolü güncellendi!");
       fetchData();
     } catch (err) {
-      // console.error(" Rol güncelleme hatası:", err);
-      // console.error(" Error response:", err.response);
       alert("Rol güncellenirken hata oluştu");
     }
   };
@@ -197,6 +178,8 @@ const AdminPanel = () => {
       const response = await adminAPI.deleteUser(userId);
       console.log("silinen kullanıcı", response);
       setAllUsers((prev) => prev.filter((user) => user.id !== userId));
+      setLoadedUsersCount((prev) => prev - 1);
+      setTotalUsers((prev) => prev - 1);
       alert("kullanıcı silindi");
     } catch (err) {
       alert("kullanıcı silinirken bi şeyler yanlış gitti");
@@ -221,6 +204,21 @@ const AdminPanel = () => {
     } catch (err) {
       alert("Başarısız oldu");
       console.error(err);
+    }
+  };
+
+  // Daha fazla göster (x kullanıcı ekle)
+  const handleLoadMore = async () => {
+    const nextOffset = loadedUsersCount;
+    await fetchUsers(100, nextOffset, false);
+  };
+
+  // Tümünü göster (kalan hepsini getir)
+  const handleShowAll = async () => {
+    const remaining = totalUsers - loadedUsersCount;
+    if (remaining > 0) {
+      const nextOffset = loadedUsersCount;
+      await fetchUsers(remaining, nextOffset, false);
     }
   };
 
@@ -351,10 +349,10 @@ const AdminPanel = () => {
                   <div className="flex items-center space-x-1 md:space-x-2">
                     <Users className="h-4 w-4 md:h-5 md:w-5 dark:text-darktext" />
                     <span className="hidden sm:inline dark:text-darktext">
-                      Kullanıcılar ({allUsers.length})
+                      Kullanıcılar ({loadedUsersCount}/{totalUsers})
                     </span>
                     <span className="sm:hidden">
-                      Kullanıcı ({allUsers.length})
+                      Kullanıcı ({loadedUsersCount}/{totalUsers})
                     </span>
                   </div>
                 </button>
@@ -653,56 +651,82 @@ const AdminPanel = () => {
             </div>
           )}
 
-        {activeTab === "users" && isAdmin && (
-  <div className="mb-4">
-    {/* Başlık ve 'Daha Fazla Göster' */}
-    <div className="flex items-center justify-start mb-2 gap-4">
-      <h2 className="text-lg font-semibold text-secondary dark:text-darktext">
-        Kullanıcılar
-      </h2>
-      {!searchTerm && visibleCount < allUsers.length && (
-        <button
-          onClick={() => setVisibleCount((prev) => prev + 100)}
-          className="px-4 py-2 bg-darktext text-secondary rounded-lg transition"
-        >
-          Daha Fazla Göster
-        </button>
-      )}
-    </div>
-
-    {/* Arama ve 'Tümünü Göster' */}
-    <div className="flex items-center justify-between gap-4">
-      <input
-        type="text"
-        value={searchTerm}
-        placeholder="kullanıcı ara.."
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none flex-1"
-      />
-      <button
-        onClick={() => setVisibleCount(allUsers.length)}
-        className="px-4 py-2 dark:text-darktext text-[#5A9690] rounded-lg transition"
-      >
-        Tümünü Göster
-      </button>
-    </div>
-  </div>
-)}
-
-        
-          {/* Kullanıcılar f (Sadece Admin) */}
+          {/* kullanıcılar admin only */}
           {activeTab === "users" && isAdmin && (
             <div>
-              {allUsers.length === 0 ? (
-                <div className="bg-primary  rounded-lg shadow-md p-12 text-center">
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                {loadedUsersCount < totalUsers && (
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={loading}
+                    className="px-4 py-2 bg-[#2F5755] hover:bg-[#5A9690] text-primary rounded-lg transition flex items-center justify-center disabled:opacity-50 mb-4"
+                  >
+                    {loading ? (
+                      <Loader className="h-5 w-5 animate-spin mr-2" />
+                    ) : null}
+                    Daha Fazla Göster
+                  </button>
+                )}
+
+                {loadedUsersCount < totalUsers && (
+                  <button
+                    onClick={handleShowAll}
+                    disabled={loading}
+                    className="px-4 py-2 bg-[#5A9690] hover:bg-[#2F5755] text-primary rounded-lg transition flex items-center justify-center disabled:opacity-50 mb-4"
+                  >
+                    {loading ? (
+                      <Loader className="h-5 w-5 animate-spin mr-2" />
+                    ) : null}
+                    Tümünü Göster ({totalUsers - loadedUsersCount} kalan)
+                  </button>
+                )}
+
+                <div className="flex items-center text-sm text-gray-500 dark:text-darktext">
+                  <span>
+                    {loadedUsersCount} / {totalUsers} kullanıcı gösteriliyor
+                  </span>
+                </div>
+              </div>
+
+              {totalUsers > 0 && (
+                <div className="flex gap-2 mb-4">
+                  <input
+                    type="text"
+                    placeholder="Kullanıcı ara..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2F5755] focus:border-transparent"
+                  />
+                  <button
+                    onClick={() => fetchUsers(10000, 0, true)} 
+                    className="px-4 py-2 bg-[#2F5755] hover:bg-[#5A9690] text-primary rounded-lg transition"
+                  >
+                    Ara
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSearchTerm("");
+                      fetchUsers(1, 0, true);
+                    }}
+                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-primary rounded-lg transition"
+                  >
+                    Reset
+                  </button>
+                </div>
+              )}
+
+              {usersToDisplay.length === 0 ? (
+                <div className="bg-primary rounded-lg shadow-md p-12 text-center">
                   <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-500 dark:text-darktext text-lg">
-                    Kullanıcı bulunmuyor.
+                    {searchTerm
+                      ? "Arama sonucu bulunamadı."
+                      : "Kullanıcı bulunmuyor."}
                   </p>
                 </div>
               ) : (
                 <>
-                  {/* normal menü  */}
+                  {/* Desktop tablo */}
                   <div className="hidden lg:block bg-primary dark:bg-darkbgbutton rounded-lg shadow-md overflow-hidden">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50 dark:bg-darkbgbutton">
@@ -728,7 +752,7 @@ const AdminPanel = () => {
                         </tr>
                       </thead>
                       <tbody className="bg-primary dark:bg-darkbgbutton divide-y divide-gray-200">
-                        {filteredUsers.map((userItem) => (
+                        {usersToDisplay.map((userItem) => (
                           <tr key={userItem.id}>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div>
@@ -805,14 +829,14 @@ const AdminPanel = () => {
                     </table>
                   </div>
 
-                  {/* mobil kart layout  */}
+                  {/* Mobil kart layout */}
                   <div className="lg:hidden space-y-4">
-                    {allUsers.map((userItem) => (
+                    {usersToDisplay.map((userItem) => (
                       <div
                         key={userItem.id}
                         className="bg-primary dark:bg-darkbgbutton rounded-lg shadow-md p-4"
                       >
-                        {/* /bilgiler  */}
+                        {/* Kullanıcı bilgileri */}
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
                             <h3 className="text-base font-semibold text-secondary dark:text-darktext">
@@ -841,7 +865,7 @@ const AdminPanel = () => {
                           </button>
                         </div>
 
-                        {/* bilgiler */}
+                        {/* İletişim bilgileri */}
                         <div className="space-y-2 mb-3">
                           <div className="flex items-center text-sm">
                             <span className="text-gray-500 dark:text-[#948979]  w-16">
@@ -861,8 +885,7 @@ const AdminPanel = () => {
                           </div>
                         </div>
 
-                        {/* rol değişim açılır menü */}
-                        <div className="flex items-center justify-between pt-3 border-t border-gray-200 ">
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-200">
                           <span className="text-sm text-gray-600 dark:text-darktext">
                             Rol Değiştir:
                           </span>
