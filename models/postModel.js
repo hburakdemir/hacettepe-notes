@@ -22,12 +22,14 @@ export async function getAllPostsWithUsersModel() {
       posts.department,
       posts.file_urls,
       users.id AS user_id,
-      users.full_name,
       users.username,
-      users.email
+        COALESCE(AVG(post_ratings.rating), 0) AS avg_rating,
+        COUNT(post_ratings.rating) AS rating_count
     FROM posts
     JOIN users ON posts.user_id = users.id
+        LEFT JOIN post_ratings ON post_ratings.post_id = posts.id
     WHERE posts.status = 'approved'
+        GROUP BY posts.id, users.id
     ORDER BY posts.created_at DESC
   `);
   return res.rows;
@@ -46,10 +48,14 @@ export async function getPendingPostsModel(){
       posts.status,
       users.id AS user_id,
       users.full_name,
-      users.username
+      users.username,
+      COALESCE(AVG(post_ratings.rating), 0) AS avg_rating,
+      COUNT(post_ratings.rating) AS rating_count
     FROM posts
     JOIN users ON posts.user_id = users.id
+    LEFT JOIN post_ratings ON post_ratings.post_id = posts.id
     WHERE posts.status = 'pending'
+    GROUP BY posts.id, users.id
     ORDER BY posts.created_at ASC
   `);
   return res.rows;
@@ -68,10 +74,14 @@ export async function getPostByUserIdModel(userId) {
       posts.status,
       users.full_name,
       users.username,
-      users.email
+      users.email,
+        COALESCE(AVG(post_ratings.rating), 0) AS avg_rating,
+        COUNT(post_ratings.rating) AS rating_count
     FROM posts
     JOIN users ON posts.user_id = users.id
+     LEFT JOIN post_ratings ON post_ratings.post_id = posts.id
     WHERE users.id = $1
+      GROUP BY posts.id, users.id
     ORDER BY posts.created_at DESC
   `, [userId]);
  
@@ -145,11 +155,20 @@ export async function getApprovedPostsModel() {
       users.username,
       approver.id AS approver_id,
       approver.username AS approver_username,
-      approver.full_name AS approver_name
+      approver.full_name AS approver_name,
+          COALESCE(AVG(post_ratings.rating), 0) AS avg_rating,
+          COUNT(post_ratings.rating) AS rating_count
     FROM posts
     JOIN users ON posts.user_id = users.id
     LEFT JOIN users AS approver ON posts.approved_by = approver.id
+          LEFT JOIN post_ratings ON post_ratings.post_id = posts.id
     WHERE posts.status = 'approved'
+          GROUP BY 
+          posts.id, posts.title, posts.content, posts.created_at, posts.approved_at,
+          posts.faculty, posts.department, posts.file_urls, posts.status,
+          users.id, users.full_name, users.username,
+          approver.id, approver.username, approver.full_name
+
     ORDER BY posts.approved_at DESC
   `);
   return res.rows;

@@ -11,6 +11,7 @@ import savedPostRoutes from './routes/savedpostRoutes.js';
 import updateprofileRutes from './routes/updateprofileRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import forgotPasswordRoutes from './routes/forgotPasswordRoutes.js';
+import ratingRoutes from './routes/ratingRoutes.js';
 // import sitemapRoutes from './routes/sitemapRoutes.js';
 
 
@@ -47,6 +48,7 @@ app.use('/api/password',forgotPasswordRoutes);
 app.use('/api/auth', registerRoutes);
 app.use('/api/saved-posts', savedPostRoutes);
 app.use('/api/update', updateprofileRutes);
+app.use('/api/rating', ratingRoutes);
 
 
 // app.use('/',sitemapRoutes);  // dinamiksitemap xml oluşturma
