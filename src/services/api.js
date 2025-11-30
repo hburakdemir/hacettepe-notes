@@ -139,4 +139,13 @@ export const profileupdateAPI = {
   updateProfile: (data) => api.patch("/update/profile", data),
 };
 
+export const ratingAPI = {
+  ratePost: (postId, rating) =>
+    api.post("/rating/rate", { post_id: postId, rating }),
+  
+  getPostRating: (postId) =>
+    api.get(`/rating/getRate/${postId}`)
+};
+
+
 export default api;

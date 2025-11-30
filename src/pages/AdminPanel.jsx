@@ -497,6 +497,17 @@ const AdminPanel = () => {
                                 Onaylayan: <strong>{post.approver_name}</strong>{" "}
                                 (@{post.approver_username})
                               </span>
+                                               <span className="px-3 py-1 ml-4 bg-[#2F5755] text-primary text-sm rounded-full text-center">
+                                              {parseFloat(post.avg_rating) === 0  ? (
+                                                "Oy veren yok"
+                                              ) : (
+                                                <>
+                                                  <strong>Ortalama oy: {parseFloat(post.avg_rating)}</strong> (
+                                                  Oy veren sayısı: {post.rating_count})
+                                                </>
+                                              )}
+                                            </span>
+
                             </div>
                           )}
 
@@ -698,7 +709,7 @@ const AdminPanel = () => {
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2F5755] focus:border-transparent"
                   />
                   <button
-                    onClick={() => fetchUsers(10000, 0, true)} 
+                    onClick={() => fetchUsers(10000, 0, true)}
                     className="px-4 py-2 bg-[#2F5755] hover:bg-[#5A9690] text-primary rounded-lg transition"
                   >
                     Ara
